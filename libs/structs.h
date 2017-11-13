@@ -37,14 +37,13 @@ typedef struct {
     /* VilList Villages */
     int Income; // Amount of income per turn
     int Upkeep; // Cost of having several units
-    char Color[10]; // Color code of this player
+    char *Color; // Color code of this player
 } Player;
 
 /* You can use these selectors to access "Player" data struct */
 #define Gold(P) (P).Gold
 #define Income(P) (P).Income
 #define Upkeep(P) (P).Upkeep
-#define Color(P) (P).Color
 
 /* B_Data : represent a building stats on a map */
 typedef struct {
@@ -58,10 +57,13 @@ typedef struct {
     Unit CurUnit; // Unit on this cell
 } MapCell;
 
+/* *** PLAYER DATA STRUCT GROUP *** */
 void InitPlayer(Player *P, int PN);
 /* Initialize starting values of a player. 
    PN (Player number, 1 <= PN <= 4) is used to assign a color to that player. */
 
+/* *** UNIT DATA STRUCT GROUP *** */
 void InitUnit (Unit *U,Unit Template, Player *P);
 /* Initialize a new unit for a player based on a template */
+
 #endif

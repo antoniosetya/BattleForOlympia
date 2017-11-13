@@ -1,23 +1,25 @@
 #include "structs.h"
 #include "pcolor.h"
+#include <stdlib.h>
 
 void InitPlayer(Player *P,int PN) {
 /* Initialize starting values of a player */
     Gold(*P) = 50;
     Income(*P) = 0;
     Upkeep(*P) = 0;
+    (*P).Color = (char *) malloc (10 * sizeof(char));
     switch(PN) {
         case 1:
-            Color(*P) = RED;
+            (*P).Color = RED;
             break;
         case 2:
-            Color(*P) = BLUE;
+            (*P).Color = BLUE;
             break;
         case 3:
-            Color(*P) = MAGENTA;
+            (*P).Color = MAGENTA;
             break;
         case 4:
-            Color(*P) = CYAN;
+            (*P).Color = CYAN;
             break;
     }
 }
