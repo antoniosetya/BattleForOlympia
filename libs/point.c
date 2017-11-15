@@ -6,6 +6,7 @@
 #include "point.h"
 #include "boolean.h"
 #include <stdio.h>
+#include <math.h>
 
 /* *** DEFINISI PROTOTIPE PRIMITIF *** */
 /* *** Konstruktor membentuk POINT *** */
@@ -78,7 +79,7 @@ float Panjang (POINT P1, POINT P2) {
   return sqrt(pow(Absis(P1) - Absis(P2),2) + pow(Ordinat(P1) - Ordinat(P2),2));
 }
 
-void Geser (POINT *P, float deltaX, float deltaY) {
+void Geser (POINT *P, int deltaX, int deltaY) {
 /* I.S. P terdefinisi */
 /* F.S. P digeser, absisnya sebesar deltaX dan ordinatnya sebesar deltaY */
   Absis(*P) = Absis(*P) + deltaX;

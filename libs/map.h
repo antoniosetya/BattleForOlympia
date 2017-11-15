@@ -4,10 +4,22 @@
 #define MATRIKS_H
 
 #include "boolean.h"
-#include "structs.h"
+#include "unit.h"
 #include <stdlib.h>
 
 #define Nil NULL
+
+/* B_Data : represent a building stats on a map */
+typedef struct {
+    char Type; // Either T : Tower, C : Castle, V : Village, N : Normal
+    int Player; // Owner of this building. If Type = N, Player = 0
+} B_Data;
+
+/* Cell : represent a cell of a map */
+typedef struct {
+    B_Data BData; // Available building on this cell
+    Unit CurUnit; // Unit on this cell
+} MapCell;
 
 typedef int indeks; /* indeks baris, kolom */
 typedef MapCell ElType; 

@@ -98,7 +98,6 @@ void DrawMAP (MAP M) {
     K = Bangunan yang ada di cell map. Jika K = N (Normal), diprint kosong
     U = Unit yang ada dalam cell itu */
   int i, j;
-  char temp;
   printf("  ");
   for (j = 1;j <= NKol(M); j++) {
     printf("  %d  ",j);
@@ -112,7 +111,7 @@ void DrawMAP (MAP M) {
     printf("  ");
     for (j = 1;j <= NKol(M); j++) {
       if (Elmt(M,i,j).BData.Type != 'N') {
-        printf("* %c *",temp);
+        printf("* %c *",Elmt(M,i,j).BData.Type);
       }
       else {
         printf("*   *");
@@ -121,8 +120,8 @@ void DrawMAP (MAP M) {
     printf("\n");
     printf("%d ",i);
     for (j = 1;j <= NKol(M); j++) {
-      if (Elmt(M,i,j).BData.Type != 'N') {
-        printf("* %c *",temp);
+      if (Elmt(M,i,j).CurUnit.type != 'N') {
+        printf("* %c *",Elmt(M,i,j).CurUnit.type);
       }
       else {
         printf("*   *");

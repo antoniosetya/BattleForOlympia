@@ -7,6 +7,7 @@
 
 #include "boolean.h"
 #include "UnitList.h"
+#include "point.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -46,60 +47,6 @@ void Dealokasi (address *P) {
   if (P != Nil) {
     free(*P);
   }
-}
-
-/****************** PENCARIAN SEBUAH ELEMEN LIST ******************/
-address Search (UnitList L, infotype X) {
-/* Mencari apakah ada elemen list dengan Info(P)= X */
-/* Jika ada, mengirimkan address elemen tersebut. */
-/* Jika tidak ada, mengirimkan Nil */
-  address Pt = First(L);
-  boolean found = false;
-  while ((Pt != Nil) && !found) {
-    found = (Info(Pt) == X);
-    if (!found) {
-      Pt = Next(Pt);
-    }
-  }
-  return Pt;
-}
-
-boolean FSearch (UnitList L, address P) {
-/* Mencari apakah ada elemen list yang beralamat P */
-/* Mengirimkan true jika ada, false jika tidak ada */
-	address Pt = First(L);
-	boolean found = false;
-	while ((Pt != Nil) && !found) {
-		found = (Pt == P);
-		if (!found) {
-			Pt = Next(Pt);
-		}
-	}
-	return found;
-}
-
-address SearchPrec (UnitList L, infotype X) {
-/* Mengirimkan address elemen sebelum elemen yang nilainya=X */
-/* Mencari apakah ada elemen list dengan Info(P)=X */
-/* Jika ada, mengirimkan address Prec, dengan Next(Prec)=P dan Info(P)=X. */
-/* Jika tidak ada, mengirimkan Nil */
-/* Jika P adalah elemen pertama, maka Prec=Nil */
-/* Search dengan spesifikasi seperti ini menghindari */
-/* traversal ulang jika setelah Search akan dilakukan operasi lain */
-	address Pt = First(L);
-	address Prev = Nil;
-	boolean found = false;
-	while ((Pt != Nil) && !found) {
-		found = (Info(Pt) == X);
-		if (!found) {
-			Prev = Pt;
-			Pt = Next(Pt);
-		}
-	}
-	if (!found) {
-		Prev = Nil;
-	}
-	return Prev;
 }
 
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
@@ -215,7 +162,7 @@ void DelFirst (UnitList *L, address *P) {
 
 void DelP (UnitList *L, infotype X) {
 /* I.S. Sembarang */
-/* F.S. Jika ada elemen list beraddress P, dengan Info(P)=X  */
+/* F.S. Jika ada unit dalam list yang berada di posisi P, dengan Info(P) = X  */
 /* Maka P dihapus dari list dan di-dealokasi */
 /* Jika tidak ada elemen list dengan Info(P)=X, maka list tetap */
 /* List mungkin menjadi kosong karena penghapusan */
@@ -223,7 +170,7 @@ void DelP (UnitList *L, infotype X) {
   address PrevPt = Nil;
   boolean found = false;
   while ((Pt != Nil) && !found) {
-    found = (Info(Pt) == X);
+    found = EQ(Loc(Info(Pt)),Loc(X));
     if (!found) {
       PrevPt = Pt;
       Pt = Next(Pt);
@@ -275,25 +222,13 @@ void DelAfter (UnitList *L, address *Pdel, address Prec) {
 }
 
 /****************** PROSES SEMUA ELEMEN LIST ******************/
-void PrintInfo (UnitList L) {
+/* void PrintInfo (UnitList L) { */
 /* I.S. List mungkin kosong */
 /* F.S. Jika list tidak kosong, iai list dicetak ke kanan: [e1,e2,...,en] */
 /* Contoh : jika ada tiga elemen bernilai 1, 20, 30 akan dicetak: [1,20,30] */
 /* Jika list kosong : menulis [] */
-/* Tidak ada tambahan karakter apa pun di awal, akhir, atau di tengah */
-  printf("[");
-  address Pt = First(L);
-  boolean isNotFirst = false;
-  while(Pt != Nil) {
-    if (isNotFirst) {
-      printf(",");
-    }
-    printf("%d",Info(Pt));
-    Pt = Next(Pt);
-    isNotFirst = true;
-  }
-  printf("]");
-}
+/*
+} */
 
 int NbElmt (UnitList L) {
 /* Mengirimkan banyaknya elemen list; mengirimkan 0 jika list kosong */
