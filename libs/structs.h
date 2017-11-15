@@ -4,11 +4,11 @@
 #include "boolean.h"
 #include "point.h"
 #include "pcolor.h"
-#include "UnitList.h"
+// #include "UnitList.h"
 
 /* Unit : structure to represent a unit stats */
 typedef struct {
-    char type; // Either K : King, A : Archer, S : Swordsman, W : White Mage
+    char type; // Either K : King, A : Archer, S : Swordsman, W : White Mage, N : Nothing (N is used for map-drawing)
     int maxHP;
     int HP;
     int Atk;
@@ -33,8 +33,8 @@ typedef struct {
 /* Player : structure to represent a player stats */
 typedef struct {
     int Gold; // Amount of gold of a player
-    UnitList Units;
-    /* VilList Villages */
+    // UnitList Units;
+    // VilList Villages;
     int Income; // Amount of income per turn
     int Upkeep; // Cost of having several units
     char *Color; // Color code of this player
