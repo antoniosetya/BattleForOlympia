@@ -29,8 +29,7 @@ typedef struct {
 #define AtkState(P) (P).CanAttack
 #define Loc(P) (P).pos
 
-
-void InitUnit (Unit *U,Unit Template, Player *P);
+void InitUnit (Unit *U,Unit Template, POINT Loc);
 /* Initialize a new unit for a player based on a template */
 
 #endif

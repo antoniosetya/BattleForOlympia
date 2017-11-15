@@ -13,6 +13,7 @@
 typedef struct {
     char Type; // Either T : Tower, C : Castle, V : Village, N : Normal
     int Player; // Owner of this building. If Type = N, Player = 0
+    POINT pos; // Location of this building
 } B_Data;
 
 /* Cell : represent a cell of a map */

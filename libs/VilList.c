@@ -1,38 +1,31 @@
-/* NIM / Nama : 13516002/Antonio Setya
-   Tanggal : 26 Oktober 2017
-   Topik : ADT List Linier */
-/* ADT list berkait dengan representasi fisik pointer  */
-/* Representasi address dengan pointer */
-/* infotype adalah integer */
-
 #include "boolean.h"
-#include "UnitList.h"
+#include "VilList.h"
 #include "point.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 /* PROTOTYPE */
 /****************** TEST LIST KOSONG ******************/
-boolean UL_IsEmpty (UnitList L) {
+boolean VL_IsEmpty (VilList L) {
 /* Mengirim true jika list kosong */
   return (First(L) == Nil);
 }
 
 /****************** PEMBUATAN LIST KOSONG ******************/
-void UL_CreateEmpty (UnitList *L) {
+void VL_CreateEmpty (VilList *L) {
 /* I.S. sembarang             */
 /* F.S. Terbentuk list kosong */
   First(*L) = Nil;
 }
 
 /****************** Manajemen Memori ******************/
-address UL_Alokasi (infotype X) {
+address VL_Alokasi (infotype X) {
 /* Mengirimkan address hasil alokasi sebuah elemen */
 /* Jika alokasi berhasil, maka address tidak nil, dan misalnya */
 /* menghasilkan P, maka Info(P)=X, Next(P)=Nil */
 /* Jika alokasi gagal, mengirimkan Nil */
   address P;
-  P = (address) malloc (sizeof(ElmtUnitList));
+  P = (address) malloc (sizeof(ElmtVilList));
   if (P != Nil) {
     Info(P) = X;
     Next(P) = Nil;
@@ -40,7 +33,7 @@ address UL_Alokasi (infotype X) {
   return P;
 }
 
-void UL_Dealokasi (address *P) {
+void VL_Dealokasi (address *P) {
 /* I.S. P terdefinisi */
 /* F.S. P dikembalikan ke sistem */
 /* Melakukan dealokasi/pengembalian address P */
@@ -51,11 +44,11 @@ void UL_Dealokasi (address *P) {
 
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
 /*** PENAMBAHAN ELEMEN ***/
-void UL_InsVFirst (UnitList *L, infotype X) {
+void VL_InsVFirst (VilList *L, infotype X) {
 /* I.S. L mungkin kosong */
 /* F.S. Melakukan alokasi sebuah elemen dan */
 /* menambahkan elemen pertama dengan nilai X jika alokasi berhasil */
-  address P = Alokasi(X);
+  address P = VL_Alokasi(X);
   if (P != Nil) {
     if (IsEmpty(*L)) {
       First(*L) = P;
@@ -67,12 +60,12 @@ void UL_InsVFirst (UnitList *L, infotype X) {
   }
 }
 
-void UL_InsVLast (UnitList *L, infotype X) {
+void VL_InsVLast (VilList *L, infotype X) {
 /* I.S. L mungkin kosong */
 /* F.S. Melakukan alokasi sebuah elemen dan */
 /* menambahkan elemen list di akhir: elemen terakhir yang baru */
 /* bernilai X jika alokasi berhasil. Jika alokasi gagal: I.S.= F.S. */
-  address P = Alokasi(X);
+  address P = VL_Alokasi(X);
   if (P != Nil) {
     if (IsEmpty(*L)) {
       First(*L) = P;
@@ -88,7 +81,7 @@ void UL_InsVLast (UnitList *L, infotype X) {
 }
 
 /*** PENGHAPUSAN ELEMEN ***/
-void UL_DelVFirst (UnitList *L, infotype *X) {
+void VL_DelVFirst (VilList *L, infotype *X) {
 /* I.S. List L tidak kosong  */
 /* F.S. Elemen pertama list dihapus: nilai info disimpan pada X */
 /*      dan alamat elemen pertama di-dealokasi */
@@ -96,38 +89,38 @@ void UL_DelVFirst (UnitList *L, infotype *X) {
     address Pt = First(*L);
     *X = Info(Pt);
     First(*L) = Next(Pt);
-    UL_Dealokasi(&Pt);
+    VL_Dealokasi(&Pt);
   }
 }
 
-void UL_DelVLast (UnitList *L, infotype *X) {
+void VL_DelVLast (VilList *L, infotype *X) {
 /* I.S. list tidak kosong */
 /* F.S. Elemen terakhir list dihapus: nilai info disimpan pada X */
 /*      dan alamat elemen terakhir di-dealokasi */
   address Pt = First(*L);
   if (Next(Pt) == Nil) {
-    UL_DelVFirst(L,X);
+    VL_DelVFirst(L,X);
   }
   else {
     while(Next(Next(Pt)) != Nil) {
       Pt = Next(Pt);
     }
     *X = Info(Next(Pt));
-    UL_Dealokasi(&Next(Pt));
+    VL_Dealokasi(&Next(Pt));
     Next(Pt) = Nil;
   }
 }
 
 /****************** PRIMITIF BERDASARKAN ALAMAT ******************/
 /*** PENAMBAHAN ELEMEN BERDASARKAN ALAMAT ***/
-void UL_InsertFirst (UnitList *L, address P) {
+void VL_InsertFirst (VilList *L, address P) {
 /* I.S. Sembarang, P sudah dialokasi  */
 /* F.S. Menambahkan elemen ber-address P sebagai elemen pertama */
   Next(P) = First(*L);
   First(*L) = P;
 }
 
-void UL_InsertAfter (UnitList *L, address P, address Prec) {
+void VL_InsertAfter (VilList *L, address P, address Prec) {
 /* I.S. Prec pastilah elemen list dan bukan elemen terakhir, */
 /*      P sudah dialokasi  */
 /* F.S. Insert P sebagai elemen sesudah elemen beralamat Prec */
@@ -135,12 +128,12 @@ void UL_InsertAfter (UnitList *L, address P, address Prec) {
   Next(Prec) = P;
 }
 
-void UL_InsertLast (UnitList *L, address P) {
+void VL_InsertLast (VilList *L, address P) {
 /* I.S. Sembarang, P sudah dialokasi  */
 /* F.S. P ditambahkan sebagai elemen terakhir yang baru */
   address Pt = First(*L);
   if (Pt == Nil) {
-    UL_InsertFirst(L,P);
+    VL_InsertFirst(L,P);
   }
   else {
     while (Next(Pt) != Nil) {
@@ -151,7 +144,7 @@ void UL_InsertLast (UnitList *L, address P) {
 }
 
 /*** PENGHAPUSAN SEBUAH ELEMEN ***/
-void UL_DelFirst (UnitList *L, address *P) {
+void VL_DelFirst (VilList *L, address *P) {
 /* I.S. List tidak kosong */
 /* F.S. P adalah alamat elemen pertama list sebelum penghapusan */
 /*      Elemen list berkurang satu (mungkin menjadi kosong) */
@@ -160,7 +153,7 @@ void UL_DelFirst (UnitList *L, address *P) {
   First(*L) = Next(*P);
 }
 
-void UL_DelP (UnitList *L, infotype X) {
+void VL_DelP (VilList *L, infotype X) {
 /* I.S. Sembarang */
 /* F.S. Jika ada unit dalam list yang berada di posisi P, dengan Info(P) = X  */
 /* Maka P dihapus dari list dan di-dealokasi */
@@ -170,7 +163,7 @@ void UL_DelP (UnitList *L, infotype X) {
   address PrevPt = Nil;
   boolean found = false;
   while ((Pt != Nil) && !found) {
-    found = EQ(Loc(Info(Pt)),Loc(X));
+    found = EQ(Info(Pt).pos,X.pos);
     if (!found) {
       PrevPt = Pt;
       Pt = Next(Pt);
@@ -178,16 +171,16 @@ void UL_DelP (UnitList *L, infotype X) {
   }
   if (found) {
     if (PrevPt == Nil) {
-      UL_DelFirst(L,&Pt);
+      VL_DelFirst(L,&Pt);
     }
     else {
       Next(PrevPt) = Next(Pt);
     }
-    UL_Dealokasi(&Pt);
+    VL_Dealokasi(&Pt);
   }
 }
 
-void UL_DelLast (UnitList *L, address *P) {
+void VL_DelLast (VilList *L, address *P) {
 /* I.S. List tidak kosong */
 /* F.S. P adalah alamat elemen terakhir list sebelum penghapusan  */
 /*      Elemen list berkurang satu (mungkin menjadi kosong) */
@@ -196,7 +189,7 @@ void UL_DelLast (UnitList *L, address *P) {
   address Pt = First(*L);
   address PrevPt = Nil;
   if (Pt == Nil) {
-    UL_DelFirst(L,P);
+    VL_DelFirst(L,P);
   }
   else {
     while (Next(Pt) != Nil) {
@@ -204,7 +197,7 @@ void UL_DelLast (UnitList *L, address *P) {
       Pt = Next(Pt);
     }
     if (PrevPt == Nil) {
-      UL_DelFirst(L,P);
+      VL_DelFirst(L,P);
     }
     else {
       Next(PrevPt) = Nil;
@@ -213,7 +206,7 @@ void UL_DelLast (UnitList *L, address *P) {
   }
 }
 
-void UL_DelAfter (UnitList *L, address *Pdel, address Prec) {
+void VL_DelAfter (VilList *L, address *Pdel, address Prec) {
 /* I.S. List tidak kosong. Prec adalah anggota list  */
 /* F.S. Menghapus Next(Prec): */
 /*      Pdel adalah alamat elemen list yang dihapus  */
@@ -222,7 +215,7 @@ void UL_DelAfter (UnitList *L, address *Pdel, address Prec) {
 }
 
 /****************** PROSES SEMUA ELEMEN LIST ******************/
-/* void PrintInfo (UnitList L) { */
+/* void PrintInfo (VilList L) { */
 /* I.S. List mungkin kosong */
 /* F.S. Jika list tidak kosong, iai list dicetak ke kanan: [e1,e2,...,en] */
 /* Contoh : jika ada tiga elemen bernilai 1, 20, 30 akan dicetak: [1,20,30] */
@@ -230,7 +223,7 @@ void UL_DelAfter (UnitList *L, address *Pdel, address Prec) {
 /*
 } */
 
-int UL_NbElmt (UnitList L) {
+int VL_NbElmt (VilList L) {
 /* Mengirimkan banyaknya elemen list; mengirimkan 0 jika list kosong */
   int count = 0;
   address Pt = First(L);
@@ -242,10 +235,10 @@ int UL_NbElmt (UnitList L) {
 }
 
 /****************** PROSES TERHADAP LIST ******************/
-void UL_DelAll (UnitList *L) {
+void VL_DelAll (VilList *L) {
 /* Delete semua elemen list dan alamat elemen di-dealokasi */
 	infotype temp;
 	while (!IsEmpty(*L)) {
-		UL_DelVFirst(L,&temp);
+		VL_DelVFirst(L,&temp);
 	}
 }
