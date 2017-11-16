@@ -5,6 +5,7 @@
 
 #include "boolean.h"
 #include "map.h"
+#include "pcolor.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -111,7 +112,7 @@ void DrawMAP (MAP M) {
     printf("  ");
     for (j = 1;j <= NKol(M); j++) {
       if (Elmt(M,i,j).BData.Type != 'N') {
-        printf("* %c *",Elmt(M,i,j).BData.Type);
+        printf("* %s%c%s *",Color(*Elmt(M,i,j).BData.owner),Elmt(M,i,j).BData.Type,NORMAL);
       }
       else {
         printf("*   *");
@@ -121,7 +122,7 @@ void DrawMAP (MAP M) {
     printf("%d ",i);
     for (j = 1;j <= NKol(M); j++) {
       if (Elmt(M,i,j).CurUnit.type != 'N') {
-        printf("* %c *",Elmt(M,i,j).CurUnit.type);
+        printf("* %s%c%s *",Color(*Elmt(M,i,j).CurUnit.owner),Elmt(M,i,j).CurUnit.type,NORMAL);
       }
       else {
         printf("*   *");

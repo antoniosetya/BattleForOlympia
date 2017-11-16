@@ -16,6 +16,7 @@ typedef struct {
     int steps;
     boolean CanAttack;
     POINT pos;
+    Player *owner; // Points to the owner of this unit
 } Unit;
 
 /* You can use these selectors to access "Unit" data struct */
@@ -28,6 +29,7 @@ typedef struct {
 #define Steps(P) (P).steps
 #define AtkState(P) (P).CanAttack
 #define Loc(P) (P).pos
+#define Owner(P) (P).owner
 
 void InitUnit (Unit *U,Unit Template, POINT Loc);
 /* Initialize a new unit for a player based on a template */

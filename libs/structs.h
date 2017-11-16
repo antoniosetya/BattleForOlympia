@@ -15,7 +15,7 @@ typedef struct {
     VilList Villages;
     int Income; // Amount of income per turn
     int Upkeep; // Cost of having several units
-    char *Color; // Color code of this player
+    char Color[10]; // Color code of this player
 } Player;
 
 /* You can use these selectors to access "Player" data struct */

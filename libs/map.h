@@ -12,14 +12,14 @@
 /* B_Data : represent a building stats on a map */
 typedef struct {
     char Type; // Either T : Tower, C : Castle, V : Village, N : Normal
-    int Player; // Owner of this building. If Type = N, Player = 0
+    Player *owner; // Points to the owner of this building. If Type = N, owner = Nil
     POINT pos; // Location of this building
 } B_Data;
 
 /* Cell : represent a cell of a map */
 typedef struct {
     B_Data BData; // Available building on this cell
-    Unit CurUnit; // Unit on this cell
+    Unit *CurUnit; // Unit on this cell
 } MapCell;
 
 typedef int indeks; /* indeks baris, kolom */
