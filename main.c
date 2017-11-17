@@ -5,6 +5,8 @@
 #include "libs/map.h"
 #include <stdio.h>
 
+Player P_Data[3];
+
 int main_menu() {
 /*  Shows the main menu of the program when the program starts for the first time
     Main menu appearance is subject to change

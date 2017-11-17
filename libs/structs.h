@@ -25,6 +25,9 @@ typedef struct {
 #define Units(P) (P).Units
 #define Villages(P) (P).Villages
 
+/* Player data used for the game. Because it's known to be only 2 players, we define it statically */ 
+extern Player P_Data[3];
+
 /* *** PLAYER DATA STRUCT GROUP *** */
 void InitPlayer(Player *P, int PN);
 /* Initialize starting values of a player. 
