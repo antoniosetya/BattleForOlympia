@@ -9,8 +9,8 @@
 /* VilList = List of B_Data yang Type = V */
 
 typedef B_Data infotype;
-typedef struct tElmtlist *address;
-typedef struct tElmtlist { 
+typedef struct VL_tElmtlist *address;
+typedef struct VL_tElmtlist { 
 	infotype info;
 	address next;
 } ElmtVilList;

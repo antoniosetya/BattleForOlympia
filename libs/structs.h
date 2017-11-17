@@ -5,8 +5,8 @@
 #include "point.h"
 #include "pcolor.h"
 #include "unit.h"
-#include "UnitList.h"
 #include "VilList.h"
+#include "UnitList.h"
 
 /* Player : structure to represent a player stats */
 typedef struct {
@@ -15,8 +15,8 @@ typedef struct {
     VilList Villages;
     int Income; // Amount of income per turn
     int Upkeep; // Cost of having several units
-    char Color[10]; // Color code of this player
-} Player;
+    char *Color; // Color code of this player
+} Player; 
 
 /* You can use these selectors to access "Player" data struct */
 #define Gold(P) (P).Gold

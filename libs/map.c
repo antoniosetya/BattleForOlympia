@@ -1,9 +1,10 @@
 /* NIM/Nama : 13516002/Antonio Setya */
 /* Tanggal : 14 September 2017 */
 /* Topik : ADT Matriks */
-/* IMPLEMENTASI TYPE MATRIKS dengan indeks dan elemen integer */
+/* IMPLEMENTASI TYPE MATRIKS dengan indeks dan elemen integer */ 
 
 #include "boolean.h"
+#include "structs.h"
 #include "map.h"
 #include "pcolor.h"
 #include <stdio.h>
@@ -31,6 +32,7 @@ void InitMAP (int NB, int NK, MAP * M) {
         int j;
         for (j = 0;j <= NK; j++) {
           (*M).Mem[i][j].BData.Type = 'N';
+          (*M).Mem[i][j].CurUnit = Nil;
         }
       }
     }
@@ -112,7 +114,7 @@ void DrawMAP (MAP M) {
     printf("  ");
     for (j = 1;j <= NKol(M); j++) {
       if (Elmt(M,i,j).BData.Type != 'N') {
-        printf("* %s%c%s *",Color(*Elmt(M,i,j).BData.owner),Elmt(M,i,j).BData.Type,NORMAL);
+        printf("* %c *",Elmt(M,i,j).BData.Type);
       }
       else {
         printf("*   *");
@@ -121,8 +123,8 @@ void DrawMAP (MAP M) {
     printf("\n");
     printf("%d ",i);
     for (j = 1;j <= NKol(M); j++) {
-      if (Elmt(M,i,j).CurUnit.type != 'N') {
-        printf("* %s%c%s *",Color(*Elmt(M,i,j).CurUnit.owner),Elmt(M,i,j).CurUnit.type,NORMAL);
+      if (Elmt(M,i,j).CurUnit != Nil) {
+        printf("* %c *",UnitType(*Elmt(M,i,j).CurUnit));
       }
       else {
         printf("*   *");

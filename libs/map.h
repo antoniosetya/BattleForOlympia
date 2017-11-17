@@ -4,6 +4,7 @@
 #define MATRIKS_H
 
 #include "boolean.h"
+#include "structs.h"
 #include "unit.h"
 #include <stdlib.h>
 
@@ -12,14 +13,14 @@
 /* B_Data : represent a building stats on a map */
 typedef struct {
     char Type; // Either T : Tower, C : Castle, V : Village, N : Normal
-    Player *owner; // Points to the owner of this building. If Type = N, owner = Nil
+    int owner; // Points to the owner of this building. If Type = N, owner = Nil
     POINT pos; // Location of this building
 } B_Data;
 
 /* Cell : represent a cell of a map */
 typedef struct {
     B_Data BData; // Available building on this cell
-    Unit *CurUnit; // Unit on this cell
+    Unit *CurUnit; // Unit on this cell. CurUnit == Nil means there are no unit on this cell
 } MapCell;
 
 typedef int indeks; /* indeks baris, kolom */

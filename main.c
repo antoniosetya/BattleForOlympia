@@ -1,4 +1,8 @@
 #include "libs/boolean.h"
+#include "libs/unit.h"
+#include "libs/structs.h"
+#include "libs/UnitList.h"
+#include "libs/map.h"
 #include <stdio.h>
 
 int main_menu() {
@@ -10,12 +14,20 @@ int main_menu() {
     3 : Exit the program
 */
     int com;
-    printf("WOAH, MAIN MENU HERE!\n");
-    printf("=============================\n");
+    printf("\n======================================================================================\n");
+    printf("  ____        _   _   _         __              ____  _                       _       \n");
+    printf(" |  _ \\      | | | | | |       / _|            / __ \\| |                     (_)      \n");
+    printf(" | |_) | __ _| |_| |_| | ___  | |_ ___  _ __  | |  | | |_   _ _ __ ___  _ __  _  __ _ \n");
+    printf(" |  _ < / _` | __| __| |/ _ \\ |  _/ _ \\| '__| | |  | | | | | | '_ ` _ \\| '_ \\| |/ _` |\n");
+    printf(" | |_) | (_| | |_| |_| |  __/ | || (_) | |    | |__| | | |_| | | | | | | |_) | | (_| |\n");
+    printf(" |____/ \\__,_|\\__|\\__|_|\\___| |_| \\___/|_|     \\____/|_|\\__, |_| |_| |_| .__/|_|\\__,_|\n");
+    printf("                                                         __/ |         | |            \n");
+    printf("                                                        |___/          |_|            \n");
+    printf("======================================================================================\n\n");
     printf("1. New Game\n");
     printf("2. Load Game\n");
     printf("3. Exit\n");
-    printf("-----------------------------\n");
+    printf("--------------------------------------------------------------------------------------\n");
     boolean valid = false;
     do {
         printf("Your command? (insert the menu number) : ");

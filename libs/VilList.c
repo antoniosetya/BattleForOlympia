@@ -50,7 +50,7 @@ void VL_InsVFirst (VilList *L, infotype X) {
 /* menambahkan elemen pertama dengan nilai X jika alokasi berhasil */
   address P = VL_Alokasi(X);
   if (P != Nil) {
-    if (IsEmpty(*L)) {
+    if (VL_IsEmpty(*L)) {
       First(*L) = P;
     }
     else {
@@ -67,7 +67,7 @@ void VL_InsVLast (VilList *L, infotype X) {
 /* bernilai X jika alokasi berhasil. Jika alokasi gagal: I.S.= F.S. */
   address P = VL_Alokasi(X);
   if (P != Nil) {
-    if (IsEmpty(*L)) {
+    if (VL_IsEmpty(*L)) {
       First(*L) = P;
     }
     else {
@@ -85,7 +85,7 @@ void VL_DelVFirst (VilList *L, infotype *X) {
 /* I.S. List L tidak kosong  */
 /* F.S. Elemen pertama list dihapus: nilai info disimpan pada X */
 /*      dan alamat elemen pertama di-dealokasi */
-  if (!IsEmpty(*L)) {
+  if (!VL_IsEmpty(*L)) {
     address Pt = First(*L);
     *X = Info(Pt);
     First(*L) = Next(Pt);
@@ -238,7 +238,7 @@ int VL_NbElmt (VilList L) {
 void VL_DelAll (VilList *L) {
 /* Delete semua elemen list dan alamat elemen di-dealokasi */
 	infotype temp;
-	while (!IsEmpty(*L)) {
+	while (!VL_IsEmpty(*L)) {
 		VL_DelVFirst(L,&temp);
 	}
 }

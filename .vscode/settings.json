@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "type_traits": "cpp"
+        "type_traits": "cpp",
+        "boolean.h": "c",
+        "map.h": "c"
     }
 }

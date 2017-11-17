@@ -8,7 +8,8 @@ void InitPlayer(Player *P,int PN) {
     Income(*P) = 0;
     Upkeep(*P) = 0;
     UL_CreateEmpty(&Units(*P));
-    VL_CreateEmpty(&Villages(*P));
+    // VL_CreateEmpty(&Villages(*P));
+    (*P).Color = (char *) malloc (10 * sizeof(char));
     switch(PN) {
         case 1:
             (*P).Color = RED;
