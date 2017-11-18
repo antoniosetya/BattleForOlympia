@@ -4,7 +4,7 @@
 /* IMPLEMENTASI TYPE MATRIKS dengan indeks dan elemen integer */ 
 
 #include "boolean.h"
-#include "structs.h"
+#include "player.h"
 #include "map.h"
 #include "pcolor.h"
 #include <stdio.h>

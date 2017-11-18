@@ -2,7 +2,7 @@
 #define VilList_H
 
 #include "boolean.h"
-#include "map.h"
+#include "buildings.h"
 
 #define Nil NULL
 

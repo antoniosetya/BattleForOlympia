@@ -1,11 +1,12 @@
 #include "libs/boolean.h"
 #include "libs/unit.h"
-#include "libs/structs.h"
+#include "libs/player.h"
 #include "libs/UnitList.h"
+#include "libs/VilList.h"
 #include "libs/map.h"
 #include <stdio.h>
 
-Player P_Data[3];
+Player P_Data[3]; /* Redeclaring global extern variable from player.h */
 
 int main_menu() {
 /*  Shows the main menu of the program when the program starts for the first time

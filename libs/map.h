@@ -4,18 +4,12 @@
 #define MATRIKS_H
 
 #include "boolean.h"
-#include "structs.h"
+#include "player.h"
 #include "unit.h"
+#include "buildings.h"
 #include <stdlib.h>
 
 #define Nil NULL
-
-/* B_Data : represent a building stats on a map */
-typedef struct {
-    char Type; // Either T : Tower, C : Castle, V : Village, N : Normal
-    int owner; // Points to the owner of this building. If Type = N, owner = Nil
-    POINT pos; // Location of this building
-} B_Data;
 
 /* Cell : represent a cell of a map */
 typedef struct {
