@@ -30,7 +30,7 @@ typedef struct {
 #define Loc(P) (P).pos
 #define Owner(P) (P).owner
 
-void InitUnit (Unit *U,Unit Template, POINT Loc);
+void InitUnit (Unit *U,Unit Template, int Owner, POINT Loc);
 /* Initialize a new unit for a player based on a template */
 
 #endif
