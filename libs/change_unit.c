@@ -12,13 +12,12 @@ void PrintUnitType(Unit U){
 	}
 }
 
-void ViewUnit(Player P){
+void ViewUnit(Player P,Unit *CurrUnit){
 /* I.S. Sembarang Player P terdefinisi */
 /* F.S. List unit dari Player P ditampilkan ke layar */
 	int num = 1;
 	int pil;
 	UnitList U=Units(P);
-	Unit CurrUnit;
 	ul_address N=First(U); 
 	if(UL_IsEmpty(U)){
 		printf("You don't have any unit to select. \n");	
@@ -44,5 +43,5 @@ void ViewUnit(Player P){
 	}
 	printf("You're now selected ");
 	PrintUnitType(Info(N));
-	CurrUnit = Info(N);
+	*CurrUnit = Info(N);
 }
