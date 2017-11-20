@@ -12,7 +12,7 @@ void PrintUnitType(Unit U){
 	}
 }
 
-void ViewUnit(Player P,Unit *CurrUnit){
+void ChangeUnit(Player P,Unit *CurrUnit){
 /* I.S. Sembarang Player P terdefinisi */
 /* F.S. List unit dari Player P ditampilkan ke layar */
 	int num = 1;
