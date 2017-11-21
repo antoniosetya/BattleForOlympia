@@ -7,7 +7,6 @@ void ViewInfo(MAP M,POINT P){
 /* F.S. Menampilkan info unit dan building sesuai dengan point tersebut*/	
 	int i,j;
 	char c;
-	Unit U =  *Elmt(M,i,j).CurUnit;
 	i = Absis(P);
 	j = Ordinat(P);
 	c = Elmt(M,i,j).BData.Type;
@@ -19,15 +18,17 @@ void ViewInfo(MAP M,POINT P){
 		default  : printf("You don't have any building here \n"); break;
 	}
 	printf("===== UNIT INFO =====\n");
-	switch (UnitType(U)){
-		case 'K' : printf("King \n"); 		printf("Owned by Player %d\n",Owner(U));break;
-		case 'A' : printf("Archer \n");		printf("Owned by Player %d\n",Owner(U));break;
-		case 'S' : printf("Swordsman \n");	printf("Owned by Player %d\n",Owner(U));break;
-		case 'W' : printf("White Mage \n");	printf("Owned by Player %d\n",Owner(U));break;
-		default  : printf("You don't have any unit here \n");
+	if(Elmt(M,i,j).CurUnit == Nil){
+		printf("You don't have any unit here \n");
+	} else {
+		switch (UnitType(*Elmt(M,i,j).CurUnit)){
+			case 'K' : printf("King \n"); 		printf("Owned by Player %d\n",Owner(*Elmt(M,i,j).CurUnit));break;
+			case 'A' : printf("Archer \n");		printf("Owned by Player %d\n",Owner(*Elmt(M,i,j).CurUnit));break;
+			case 'S' : printf("Swordsman \n");	printf("Owned by Player %d\n",Owner(*Elmt(M,i,j).CurUnit));break;
+			case 'W' : printf("White Mage \n");	printf("Owned by Player %d\n",Owner(*Elmt(M,i,j).CurUnit));break;
+		}
+		printf("Health %d/%d | ATK %d \n",HP(*Elmt(M,i,j).CurUnit),MaxHP(*Elmt(M,i,j).CurUnit),Attack(*Elmt(M,i,j).CurUnit));
 	}
-	printf("Health %d/%d | ATK %d \n",HP(U),MaxHP(U),Attack(U));
-
 }
 
 void InfoCmd(MAP M){
