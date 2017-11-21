@@ -16,6 +16,7 @@ typedef struct {
     boolean CanAttack;
     POINT pos;
     int owner;
+    float AttackProbability;
 } Unit;
 
 /* You can use these selectors to access "Unit" data struct */
@@ -29,7 +30,7 @@ typedef struct {
 #define AtkState(P) (P).CanAttack
 #define Loc(P) (P).pos
 #define Owner(P) (P).owner
-
+#define AtkProb(P) (P).AttackProbability
 void InitUnit (Unit *U,Unit Template, int Owner, POINT Loc);
 /* Initialize a new unit for a player based on a template */
 
