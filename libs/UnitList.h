@@ -14,6 +14,7 @@ typedef struct UL_tElmtlist {
 } ElmtUnitList;
 typedef struct {
 	ul_address First;
+	ul_address CurrentUnit;
 } UnitList;
 
 /* Definisi list : */
@@ -23,7 +24,7 @@ typedef struct {
 #define Info(P) (P)->info
 #define Next(P) (P)->next
 #define First(L) ((L).First)
-
+#define Curr(L) ((L).CurrentUnit)
 /* PROTOTYPE */
 /****************** TEST LIST KOSONG ******************/
 boolean UL_IsEmpty (UnitList L);
