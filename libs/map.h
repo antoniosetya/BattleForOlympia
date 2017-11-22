@@ -38,7 +38,7 @@ void InitMAP (int NB, int NK, MAP * M);
 /* *** Selektor *** */
 #define NBrs(M) (M).MaxBrs
 #define NKol(M) (M).MaxKol
-#define Elmt(M,i,j) (M).Mem[(i)][(j)]
+#define Elmt(M,j,i) (M).Mem[(i)][(j)]
 
 void DealokMap(MAP *M);
 /* Membebaskan M dan mengembalikan memori ke sistem */
@@ -70,7 +70,12 @@ void DrawMAP (MAP M);
     *   *
     *****
     K = Bangunan yang ada di cell map. Jika K = N (Normal), diprint kosong
-    U = Unit yang ada dalam cell itu */
+    U = Unit yang ada dalam cell itu. Jika tidak ada unit, diprint kosong */
+
+void UpdateBuildingOnMap (MAP *M, POINT pos, char type, int owner);
+/* I.S. M, pos terdefinisi, type dan owner sembarang
+   F.S. Map pada posisi pos akan diupdate dengan value Type = type, owner = owner */
+
 
 #include "map.c"
 #endif

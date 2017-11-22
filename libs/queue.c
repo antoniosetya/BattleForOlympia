@@ -15,10 +15,10 @@ boolean IsEmpty (Queue Q) {
 boolean IsFull (Queue Q) {
 /* Mengirim true jika tabel penampung elemen Q sudah penuh */
 /* yaitu mengandung elemen sebanyak MaxEl */
-  return (NBElmt(Q) == MaxQueueEl);
+  return (NBElmtQueue(Q) == MaxQueueEl);
 }
 
-int NBElmt (Queue Q) {
+int NBElmtQueue (Queue Q) {
 /* Mengirimkan banyaknya elemen queue. Mengirimkan 0 jika Q kosong. */
   if (IsEmpty(Q)) {
     return 0;
@@ -68,7 +68,7 @@ void Del (Queue * Q, infoQ * X) {
 /* F.S. X = nilai elemen HEAD pd I.S., HEAD "maju" dengan mekanisme circular buffer;
         Q mungkin kosong */
   *X = InfoHead(*Q);
-  if (NBElmt(*Q) == 1) {
+  if (NBElmtQueue(*Q) == 1) {
     Head(*Q) = NilQ;
     Tail(*Q) = NilQ;
   }

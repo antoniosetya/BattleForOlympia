@@ -6,7 +6,7 @@
 /* B_Data : represent a building stats on a map */
 typedef struct {
     char Type; // Either T : Tower, C : Castle, V : Village, N : Normal
-    int owner; // Points to the owner of this building. If Type = N, owner = Nil
+    int owner; // Points to the owner of this building. If Type = N or has no owner, owner = 0
     POINT pos; // Location of this building
 } B_Data;
 
