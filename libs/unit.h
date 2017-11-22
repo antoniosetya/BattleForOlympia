@@ -16,7 +16,7 @@ typedef struct {
     boolean CanAttack;
     POINT pos;
     int owner;
-    float AttackProbability;
+    float AttackProbability; // between 0 and 1
 } Unit;
 
 /* You can use these selectors to access "Unit" data struct */
