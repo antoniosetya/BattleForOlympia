@@ -7,6 +7,9 @@
 #include <stdio.h>
 
 Player P_Data[3]; /* Redeclaring global extern variable from player.h */
+Queue P_Turns;
+Stack Mov_Data;
+MAP Map_Data;
 
 int main_menu() {
 /*  Shows the main menu of the program when the program starts for the first time
@@ -40,6 +43,30 @@ int main_menu() {
     }
     while (!valid);
     return com;
+}
+
+void initialize_game(boolean NewGame,char *SaveFile = Nil) {
+  // Initializes players, buildings, and load unit datas
+  if (NewGame) {
+    InitPlayer(&P_Data[1]);
+    InitPlayer(&P_Data[2]);
+    CreateEmptyStack(&Mov_Data);
+    CreateEmptyQueue(&P_Turns);
+    int row, col;
+    boolean isValid;
+    do {
+      printf("Input the map size (rows cols, separated by a space) : ");
+      scanf("%d %d",&row,&col);
+      isValid = (row >= 8) && (col >= 8);
+      if (!isValid) printf("Map dimension is not valid! (minimum is 8x8)\n");
+    }
+    while (!isValid);
+    InitMAP(row,col,&Map_Data);
+    
+  }
+  else {
+
+  }
 }
 
 int main() {

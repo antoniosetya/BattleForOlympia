@@ -3,6 +3,7 @@
 
 #include "boolean.h"
 #include "buildings.h"
+#include <stdlib.h>
 
 #define Nil NULL
 
@@ -10,7 +11,7 @@
 
 typedef B_Data infotype;
 typedef struct VL_tElmtlist *address;
-typedef struct VL_tElmtlist { 
+typedef struct VL_tElmtlist {
 	infotype info;
 	address next;
 } ElmtVilList;

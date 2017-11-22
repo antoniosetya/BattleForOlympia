@@ -3,12 +3,13 @@
 
 #include "boolean.h"
 #include "unit.h"
+#include <stdlib.h>
 
 #define Nil NULL
 
 typedef Unit ul_infotype;
 typedef struct UL_tElmtlist *ul_address;
-typedef struct UL_tElmtlist { 
+typedef struct UL_tElmtlist {
 	ul_infotype info;
 	ul_address next;
 } ElmtUnitList;
