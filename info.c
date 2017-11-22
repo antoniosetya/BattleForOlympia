@@ -1,6 +1,17 @@
 #include <stdio.h>
 #include "libs\map.h"
 
+void PrintOwner(MAP M,POINT P){
+/* I.S. Map dan point tertentu terdefinisi */
+/* F.S. Menampilkan info player dari unit atau building di point tersebut */	
+	int i = Absis(P);
+	int j = Ordinat(P);
+	if(Elmt(M,i,j).BData.owner == 0){
+		printf("This building does not have owner \n\n" );
+	} else {
+		printf("Owned by Player %d\n",Elmt(M,i,j).BData.owner);
+	}
+}
 
 void ViewInfo(MAP M,POINT P){
 /* I.S. Map dan point tertentu terdefinisi */
@@ -12,9 +23,9 @@ void ViewInfo(MAP M,POINT P){
 	c = Elmt(M,i,j).BData.Type;
 	printf("===== CELL INFO =====\n");
 	switch (c){
-		case 'T' : printf("Tower \n"); printf("Owned by Player %d\n\n",Elmt(M,i,j).BData.owner);break;
-		case 'C' : printf("Castle \n"); printf("Owned by Player %d\n\n",Elmt(M,i,j).BData.owner);break;
-		case 'V' : printf("Village \n"); printf("Owned by Player %d\n\n",Elmt(M,i,j).BData.owner);break;
+		case 'T' : printf("Tower \n"); PrintOwner(M,P);break;
+		case 'C' : printf("Castle \n"); PrintOwner(M,P);break;
+		case 'V' : printf("Village \n"); PrintOwner(M,P);break;
 		default  : printf("You don't have any building here \n"); break;
 	}
 	printf("===== UNIT INFO =====\n");
