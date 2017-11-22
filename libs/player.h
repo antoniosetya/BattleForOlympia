@@ -35,4 +35,6 @@ void InitPlayer(Player *P, int PN);
 /* Initialize starting values of a player.
    PN (Player number, 1 <= PN <= 4) is used to assign a color to that player. */
 
+
+#include "player.c"
 #endif

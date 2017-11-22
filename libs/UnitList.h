@@ -121,6 +121,5 @@ int UL_NbElmt (UnitList L);
 void UL_DelAll (UnitList *L);
 /* Delete semua elemen list dan alamat elemen di-dealokasi */
 
-
-
+#include "UnitList.c"
 #endif

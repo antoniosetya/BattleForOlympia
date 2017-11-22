@@ -9,13 +9,13 @@
 /* ********* Prototype ********* */
 boolean IsEmpty (Queue Q) {
 /* Mengirim true jika Q kosong */
-  return ((Head(Q) == Nil) && (Tail(Q) == Nil));
+  return ((Head(Q) == NilQ) && (Tail(Q) == NilQ));
 }
 
 boolean IsFull (Queue Q) {
 /* Mengirim true jika tabel penampung elemen Q sudah penuh */
 /* yaitu mengandung elemen sebanyak MaxEl */
-  return (NBElmt(Q) == MaxEl);
+  return (NBElmt(Q) == MaxQueueEl);
 }
 
 int NBElmt (Queue Q) {
@@ -24,7 +24,7 @@ int NBElmt (Queue Q) {
     return 0;
   }
   else if (Tail(Q) < Head(Q)) {
-    return ((MaxEl + 1 + Tail(Q)) - Head(Q));
+    return ((MaxQueueEl + 1 + Tail(Q)) - Head(Q));
   }
   else {
     return (Tail(Q) + 1 - Head(Q));
@@ -32,18 +32,17 @@ int NBElmt (Queue Q) {
 }
 
 /* *** Kreator *** */
-void CreateEmpty (Queue * Q) {
+void CreateEmptyQueue (Queue * Q) {
 /* I.S. sembarang */
 /* F.S. Sebuah Q kosong terbentuk dan salah satu kondisi sbb: */
 /* Jika alokasi berhasil, Tabel memori dialokasi berukuran Max+1 */
 /* atau : jika alokasi gagal, Q kosong dg MaxEl=0 */
-/* Proses : Melakukan alokasi, membuat sebuah Q kosong */
-  Head(*Q) = Nil;
-  Tail(*Q) = Nil;
+  Head(*Q) = NilQ;
+  Tail(*Q) = NilQ;
 }
 
 /* *** Primitif Add/Delete *** */
-void Add (Queue * Q, infotype X) {
+void Add (Queue * Q, infoQ X) {
 /* Proses: Menambahkan X pada Q dengan aturan FIFO */
 /* I.S. Q mungkin kosong, tabel penampung elemen Q TIDAK penuh */
 /* F.S. X menjadi TAIL yang baru, TAIL "maju" dengan mekanisme circular buffer */
@@ -55,7 +54,7 @@ void Add (Queue * Q, infotype X) {
     }
     else {
       Tail(*Q)++;
-      if (Tail(*Q) > MaxEl) {
+      if (Tail(*Q) > MaxQueueEl) {
         Tail(*Q) = 1;
       }
       InfoTail(*Q) = X;
@@ -63,19 +62,19 @@ void Add (Queue * Q, infotype X) {
   }
 }
 
-void Del (Queue * Q, infotype * X) {
+void Del (Queue * Q, infoQ * X) {
 /* Proses: Menghapus X pada Q dengan aturan FIFO */
 /* I.S. Q tidak mungkin kosong */
 /* F.S. X = nilai elemen HEAD pd I.S., HEAD "maju" dengan mekanisme circular buffer;
         Q mungkin kosong */
   *X = InfoHead(*Q);
   if (NBElmt(*Q) == 1) {
-    Head(*Q) = Nil;
-    Tail(*Q) = Nil;
+    Head(*Q) = NilQ;
+    Tail(*Q) = NilQ;
   }
   else {
     Head(*Q)++;
-    if (Head(*Q) > MaxEl) {
+    if (Head(*Q) > MaxQueueEl) {
       Head(*Q) = 1;
     }
   }

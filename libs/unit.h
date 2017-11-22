@@ -34,4 +34,8 @@ typedef struct {
 void InitUnit (Unit *U,Unit Template, int Owner, POINT Loc);
 /* Initialize a new unit for a player based on a template */
 
+void InitUnit (Unit *U, Unit Template, int Owner, POINT Loc);
+/* Initialize a new unit for a player based on a template */
+
+#include "unit.c"
 #endif

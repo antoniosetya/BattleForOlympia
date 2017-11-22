@@ -4,6 +4,8 @@
 #include "libs/UnitList.h"
 #include "libs/VilList.h"
 #include "libs/map.h"
+#include "libs/queue.h"
+#include "libs/stackt.h"
 #include <stdio.h>
 
 Player P_Data[3]; /* Redeclaring global extern variable from player.h */
@@ -45,11 +47,13 @@ int main_menu() {
     return com;
 }
 
-void initialize_game(boolean NewGame,char *SaveFile = Nil) {
-  // Initializes players, buildings, and load unit datas
+void initialize_game(boolean NewGame,char *SaveFile) {
+  /* If NewGame = False -> Reads the file from *SaveFile, then initialize anything else needed
+     If NewGame = True -> Initializes players, buildings, and load unit datas
+                          *SaveFile can be anything, recommended to pass null pointer */
   if (NewGame) {
-    InitPlayer(&P_Data[1]);
-    InitPlayer(&P_Data[2]);
+    InitPlayer(&P_Data[1],1);
+    InitPlayer(&P_Data[2],2);
     CreateEmptyStack(&Mov_Data);
     CreateEmptyQueue(&P_Turns);
     int row, col;
@@ -62,7 +66,7 @@ void initialize_game(boolean NewGame,char *SaveFile = Nil) {
     }
     while (!isValid);
     InitMAP(row,col,&Map_Data);
-    
+
   }
   else {
 
@@ -72,7 +76,7 @@ void initialize_game(boolean NewGame,char *SaveFile = Nil) {
 int main() {
     int execode = main_menu();
     if (execode == 1) {
-        //initialize_game()
+        //initialize_game(true,Nil);
         //start_game()
         //blablabla
         printf("START GAME\n");

@@ -18,8 +18,8 @@ typedef struct {
 } MapCell;
 
 typedef int indeks; /* indeks baris, kolom */
-typedef MapCell ElType; 
-typedef struct { 
+typedef MapCell ElType;
+typedef struct {
 	ElType **Mem;
     int MaxBrs; // banyaknya baris pada map
     int MaxKol; // banyaknya kolom pada map
@@ -28,9 +28,9 @@ typedef struct {
 /* Indeks matriks yang digunakan: [BrsMin..BrsMax][KolMin..KolMax] */
 /* Memori matriks yang dipakai selalu di "ujung kiri atas" */
 
-/* ********** DEFINISI PROTOTIPE PRIMITIF ********** */              
+/* ********** DEFINISI PROTOTIPE PRIMITIF ********** */
 /* *** Konstruktor membentuk MATRIKS *** */
-void InitMAP (int NB, int NK, MAP * M); 
+void InitMAP (int NB, int NK, MAP * M);
 /* Membentuk sebuah MAP (Matriks) "kosong" yang siap diisi berukuran NB x NK */
 /* I.S. NB dan NK >= 0 */
 /* F.S. MAP M dialokasi dengan definisi di atas */
@@ -63,14 +63,14 @@ void CopyMAP (MAP MIn, MAP * MHsl);
 
 void DrawMAP (MAP M);
 /* I.S. M terdefinisi */
-/* F.S. Tergambar M(i,j), dengan format cell : 
-    ***** 
+/* F.S. Tergambar M(i,j), dengan format cell :
+    *****
     * K *
     * U *
     *   *
-    ***** 
+    *****
     K = Bangunan yang ada di cell map. Jika K = N (Normal), diprint kosong
     U = Unit yang ada dalam cell itu */
 
-
+#include "map.c"
 #endif

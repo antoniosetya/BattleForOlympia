@@ -7,18 +7,18 @@
 
 #include "boolean.h"
 
-#define Nil 0
-#define MaxEl 2
+#define NilQ 0
+#define MaxQueueEl 2
 /* Konstanta untuk mendefinisikan address tak terdefinisi */
 
 /* Definisi elemen dan address */
-typedef int infotype;
-typedef int address;   /* indeks tabel */
+typedef int infoQ;
+typedef int addrQ;   /* indeks tabel */
 /* Contoh deklarasi variabel bertype Queue : */
 /* Versi I : tabel dinamik, Head dan Tail eksplisit, ukuran disimpan */
-typedef struct { infotype T[MaxEl+1];   /* tabel penyimpan elemen */
-                 address HEAD;  /* alamat penghapusan */
-                 address TAIL;  /* alamat penambahan */
+typedef struct { infoQ T[MaxQueueEl+1];   /* tabel penyimpan elemen */
+                 addrQ HEAD;  /* alamat penghapusan */
+                 addrQ TAIL;  /* alamat penambahan */
                } Queue;
 /* Definisi Queue kosong: HEAD=Nil; TAIL=Nil. */
 /* Catatan implementasi: T[0] tidak pernah dipakai */
@@ -48,14 +48,15 @@ void CreateEmptyQueue (Queue * Q);
 /* Proses : Melakukan alokasi, membuat sebuah Q kosong */
 
 /* *** Primitif Add/Delete *** */
-void Add (Queue * Q, infotype X);
+void Add (Queue * Q, infoQ X);
 /* Proses: Menambahkan X pada Q dengan aturan FIFO */
 /* I.S. Q mungkin kosong, tabel penampung elemen Q TIDAK penuh */
 /* F.S. X menjadi TAIL yang baru, TAIL "maju" dengan mekanisme circular buffer */
-void Del (Queue * Q, infotype * X);
+void Del (Queue * Q, infoQ * X);
 /* Proses: Menghapus X pada Q dengan aturan FIFO */
 /* I.S. Q tidak mungkin kosong */
 /* F.S. X = nilai elemen HEAD pd I.S., HEAD "maju" dengan mekanisme circular buffer;
         Q mungkin kosong */
 
+#include "queue.c"
 #endif
