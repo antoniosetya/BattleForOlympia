@@ -6,32 +6,18 @@
 
 /* Unit : structure to represent a unit stats */
 typedef struct {
-<<<<<<< HEAD
   char type; // Either K : King, A : Archer, S : Swordsman, W : White Mage
   int maxHP;
   int HP;
   int Atk;
   char AtkType;
+  int def;
   int maxStep;
   int steps;
   boolean CanAttack;
   POINT pos;
   int owner;
   float AttackProbability; // between 0 and 1
-=======
-    char type; // Either K : King, A : Archer, S : Swordsman, W : White Mage
-    int maxHP;
-    int HP;
-    int Atk;
-    char AtkType;
-    int def;
-    int maxStep;
-    int steps;
-    boolean CanAttack;
-    POINT pos;
-    int owner;
-    float AttackProbability; // between 0 and 1
->>>>>>> b1eec436e2a8924066197f3bd58728571489fc25
 } Unit;
 
 typedef struct {
