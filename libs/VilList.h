@@ -107,7 +107,7 @@ void VL_DelAfter (VilList *L, vl_address *Pdel, vl_address Prec);
 /*      Pdel adalah alamat elemen list yang dihapus  */
 
 /****************** PROSES SEMUA ELEMEN LIST ******************/
-/* void PrintInfo (VilList L);
+/* void PrintInfo (VilList L);*/
 /* I.S. List mungkin kosong */
 /* F.S. Jika list tidak kosong, iai list dicetak ke kanan: [e1,e2,...,en] */
 /* Contoh : jika ada tiga elemen bernilai 1, 20, 30 akan dicetak: [1,20,30] */
