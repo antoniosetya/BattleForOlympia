@@ -25,6 +25,7 @@ typedef struct {
   char AtkType;
   int MaxHP;
   int Atk;
+  int Def;
   int maxSteps;
   int Price;
   int UpkeepCost;
@@ -45,12 +46,16 @@ typedef struct {
 #define AtkProb(P) (P).AttackProbability
 
 /* Use these selectors to access "UTemplate" data struct */
-#define Price(P) (P).type
+#define TemplateType(P) (P).type
+#define TemplateAtkType(P) (P).AtkType
+#define TemplateHP(P) (P).MaxHP
+#define TemplateAtk(P) (P).Atk
+#define TemplateDef(P) (P).Def
+#define TemplateSteps(P) (P).maxSteps
 #define UpkeepCost(P) (P).UpkeepCost
-// Since the rest of the struct is similar to "Unit" data struct, you can also use those :
-// UnitType(P), AttackType(P), Attack(P), MaxHP(P), MaxSteps(P)
+#define Price(P) (P).Price
 
-void InitUnit (Unit *U,Unit Template, int Owner, POINT Loc);
+void InitUnit (Unit *U,UTemplate Template, int Owner, POINT Loc);
 /* Initialize a new unit for a player based on a template */
 
 #include "unit.c"
