@@ -172,15 +172,16 @@ void StartGame() {
           break;
         case 5:
           if(AtkState(Info(UL_Curr(Units(P_Data[CurrPlayer]))==false))){
-				printf("This unit cannot Attack\n");
-		  } 
-		  else{
+		printf("This unit cannot Attack\n");
+	   } 
+		 else{
 		    if(CurrPlayer==1){
 			    attack(&Units(P_Data[CurrPlayer]),&Units(P_Data[2]));
 			}
 			else{
 			    attack(&Units(P_Data[CurrPlayer]),&Units(P_Data[1]));
-				}
+			}
+		 }
           break;
         case 6:
           DrawMAP(Map_Data);
