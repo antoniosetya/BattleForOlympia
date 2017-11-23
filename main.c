@@ -8,6 +8,8 @@
 #include "libs/queue.h"
 #include "libs/stackt.h"
 #include "attack.c"
+#include "info.c"
+#include "change_unit.c"
 #include <stdio.h>
 
 boolean EndKata;
@@ -213,103 +215,6 @@ void StartGame() {
     while (!EndTurn && !Exit);
   }
   while (!Exit);
-}
-
-void PrintOwner(MAP M,POINT P){
-/* I.S. Map dan point tertentu terdefinisi */
-/* F.S. Menampilkan info player dari unit atau building di point tersebut */  
-  int i = Absis(P);
-  int j = Ordinat(P);
-  if(Elmt(M,i,j).BData.owner == 0){
-    printf("This building does not have owner \n\n" );
-  } else {
-    printf("Owned by Player %d\n",Elmt(M,i,j).BData.owner);
-  }
-}
-
-void ViewInfo(MAP M,POINT P){
-/* I.S. Map dan point tertentu terdefinisi */
-/* F.S. Menampilkan info unit dan building sesuai dengan point tersebut*/ 
-  int i,j;
-  char c;
-  i = Absis(P);
-  j = Ordinat(P);
-  c = Elmt(M,i,j).BData.Type;
-  printf("===== CELL INFO =====\n");
-  switch (c){
-    case 'T' : printf("Tower \n"); PrintOwner(M,P);break;
-    case 'C' : printf("Castle \n"); PrintOwner(M,P);break;
-    case 'V' : printf("Village \n"); PrintOwner(M,P);break;
-    default  : printf("You don't have any building here \n"); break;
-  }
-  printf("===== UNIT INFO =====\n");
-  if(Elmt(M,i,j).CurUnit == Nil){
-    printf("You don't have any unit here \n");
-  } else {
-    switch (UnitType(*Elmt(M,i,j).CurUnit)){
-      case 'K' : printf("King \n");     printf("Owned by Player %d\n",Owner(*Elmt(M,i,j).CurUnit));break;
-      case 'A' : printf("Archer \n");   printf("Owned by Player %d\n",Owner(*Elmt(M,i,j).CurUnit));break;
-      case 'S' : printf("Swordsman \n");  printf("Owned by Player %d\n",Owner(*Elmt(M,i,j).CurUnit));break;
-      case 'W' : printf("White Mage \n"); printf("Owned by Player %d\n",Owner(*Elmt(M,i,j).CurUnit));break;
-    }
-    printf("Health %d/%d | ATK %d | DEF %d\n",HP(*Elmt(M,i,j).CurUnit),MaxHP(*Elmt(M,i,j).CurUnit),Attack(*Elmt(M,i,j).CurUnit),Def(*Elmt(M,i,j).CurUnit));
-  }
-}
-
-void InfoCmd(MAP M){
-/* Menampikan info suatu koordinat tertentu */  
-  int x,y;
-  POINT P;
-  printf("Enter coordinate of the cell : ");
-  scanf("%d",&x);
-  scanf("%d",&y);
-  P = MakePOINT(x,y);
-  ViewInfo(M,P);
-}
-
-void PrintUnitType(Unit U){
-/* I.S. Sembarang Unit U terdefinisi*/
-/* F.S. Print tipe Unit U berdasarkan singkatannya*/
-  switch (UnitType(U)){
-    case 'K' : printf("King ");     break;
-    case 'A' : printf("Archer ");   break;
-    case 'S' : printf("Swordsman ");  break;
-    case 'W' : printf("White Mage "); break;
-  }
-}
-
-void ChangeUnit(Player P,ul_address *CurrUnit){
-/* I.S. Sembarang Player P terdefinisi */
-/* F.S. List unit dari Player P ditampilkan ke layar */
-  int num = 1;
-  int pil;
-  UnitList U=Units(P);
-  ul_address N=UL_First(U); 
-  if(UL_IsEmpty(U)){
-    printf("You don't have any unit to select. \n");
-    CurrUnit = Nil; 
-  } else {
-    printf("=======LIST OF UNITS=======\n");
-    while(N!=Nil){
-      printf("%d. ",num);
-      PrintUnitType(UL_Info(N));
-      TulisPOINT(Loc(UL_Info(N)));
-      printf(" | Health %d\n",HP(UL_Info(N)));
-      N = UL_Next(N);
-      num++;
-    }
-    printf("Please enter the number of unit you want to select : ");
-    scanf("%d",&pil);
-    num = 1;
-    N = UL_First(U);
-    while(num < pil){
-      N = UL_Next(N);
-      num++;
-    }
-    printf("You're now selecting ");
-    PrintUnitType(UL_Info(N));
-    *CurrUnit = N;
-  }
 }
 
 void initialize_game(boolean NewGame,char *SaveFile) {
