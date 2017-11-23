@@ -1,0 +1,31 @@
+<KING>
+AtkType : Melee
+MaxHP : 100
+Atk : 25
+MaxMov : 2
+Price : 0
+</KING>
+<ARCHER>
+AtkType : Ranged
+MaxHP : 100 
+Atk : 25
+MaxMov : 2 
+Price : 50
+Upkeep : 25
+</ARCHER>
+<SWORDSMAN>
+AtkType : Melee
+MaxHP : 100
+Atk : 25
+MaxMov : 2 
+Price : 50
+Upkeep : 25
+</SWORDSMAN>
+<WHITEMAGE>
+AtkType : Melee
+MaxHP : 75
+Atk : 15
+MaxMov : 2 
+Price : 75
+Upkeep : 37
+</WHITEMAGE>

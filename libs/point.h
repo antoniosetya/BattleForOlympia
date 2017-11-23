@@ -75,4 +75,5 @@ void GeserKeSbY (POINT *P);
 /* Proses : P digeser ke sumbu Y. */
 /* Contoh : Jika koordinat semula (9,9), maka menjadi (0,9) */
 
+#include "point.c"
 #endif

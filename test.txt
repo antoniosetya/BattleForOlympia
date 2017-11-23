@@ -1,0 +1,21 @@
+CurrentPlayer : 1
+<Player 1>
+Gold : 50
+<UNITS>
+</UNITS>
+<VILLAGES>
+</VILLAGES>
+Income : 0
+Upkeep : 0
+Base : 2 4
+</PLAYER 1>
+<Player 2>
+Gold : 50
+<UNITS>
+</UNITS>
+<VILLAGES>
+</VILLAGES>
+Income : 0
+Upkeep : 0
+Base : 5 5
+</PLAYER 2>

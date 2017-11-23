@@ -14,14 +14,14 @@
 /****************** TEST LIST KOSONG ******************/
 boolean UL_IsEmpty (UnitList L) {
 /* Mengirim true jika list kosong */
-  return (First(L) == Nil);
+  return (UL_First(L) == Nil);
 }
 
 /****************** PEMBUATAN LIST KOSONG ******************/
 void UL_CreateEmpty (UnitList *L) {
 /* I.S. sembarang             */
 /* F.S. Terbentuk list kosong */
-  First(*L) = Nil;
+  UL_First(*L) = Nil;
 }
 
 /****************** Manajemen Memori ******************/
@@ -33,8 +33,8 @@ ul_address UL_Alokasi (ul_infotype X) {
   ul_address P;
   P = (ul_address) malloc (sizeof(ElmtUnitList));
   if (P != Nil) {
-    Info(P) = X;
-    Next(P) = Nil;
+    UL_Info(P) = X;
+    UL_Next(P) = Nil;
   }
   return P;
 }
@@ -57,11 +57,11 @@ void UL_InsVFirst (UnitList *L, ul_infotype X) {
   ul_address P = UL_Alokasi(X);
   if (P != Nil) {
     if (UL_IsEmpty(*L)) {
-      First(*L) = P;
+      UL_First(*L) = P;
     }
     else {
-      Next(P) = First(*L);
-      First(*L) = P;
+      UL_Next(P) = UL_First(*L);
+      UL_First(*L) = P;
     }
   }
 }
@@ -74,14 +74,14 @@ void UL_InsVLast (UnitList *L, ul_infotype X) {
   ul_address P = UL_Alokasi(X);
   if (P != Nil) {
     if (UL_IsEmpty(*L)) {
-      First(*L) = P;
+      UL_First(*L) = P;
     }
     else {
-      ul_address Pt = First(*L);
-      while(Next(Pt) != Nil) {
-        Pt = Next(Pt);
+      ul_address Pt = UL_First(*L);
+      while(UL_Next(Pt) != Nil) {
+        Pt = UL_Next(Pt);
       }
-      Next(Pt) = P;
+      UL_Next(Pt) = P;
     }
   }
 }
@@ -92,9 +92,9 @@ void UL_DelVFirst (UnitList *L, ul_infotype *X) {
 /* F.S. Elemen pertama list dihapus: nilai info disimpan pada X */
 /*      dan alamat elemen pertama di-dealokasi */
   if (!UL_IsEmpty(*L)) {
-    ul_address Pt = First(*L);
-    *X = Info(Pt);
-    First(*L) = Next(Pt);
+    ul_address Pt = UL_First(*L);
+    *X = UL_Info(Pt);
+    UL_First(*L) = UL_Next(Pt);
     UL_Dealokasi(&Pt);
   }
 }
@@ -103,17 +103,17 @@ void UL_DelVLast (UnitList *L, ul_infotype *X) {
 /* I.S. list tidak kosong */
 /* F.S. Elemen terakhir list dihapus: nilai info disimpan pada X */
 /*      dan alamat elemen terakhir di-dealokasi */
-  ul_address Pt = First(*L);
-  if (Next(Pt) == Nil) {
+  ul_address Pt = UL_First(*L);
+  if (UL_Next(Pt) == Nil) {
     UL_DelVFirst(L,X);
   }
   else {
-    while(Next(Next(Pt)) != Nil) {
-      Pt = Next(Pt);
+    while(UL_Next(UL_Next(Pt)) != Nil) {
+      Pt = UL_Next(Pt);
     }
-    *X = Info(Next(Pt));
-    UL_Dealokasi(&Next(Pt));
-    Next(Pt) = Nil;
+    *X = UL_Info(UL_Next(Pt));
+    UL_Dealokasi(&UL_Next(Pt));
+    UL_Next(Pt) = Nil;
   }
 }
 
@@ -122,30 +122,30 @@ void UL_DelVLast (UnitList *L, ul_infotype *X) {
 void UL_InsertFirst (UnitList *L, ul_address P) {
 /* I.S. Sembarang, P sudah dialokasi  */
 /* F.S. Menambahkan elemen ber-address P sebagai elemen pertama */
-  Next(P) = First(*L);
-  First(*L) = P;
+  UL_Next(P) = UL_First(*L);
+  UL_First(*L) = P;
 }
 
 void UL_InsertAfter (UnitList *L, ul_address P, ul_address Prec) {
 /* I.S. Prec pastilah elemen list dan bukan elemen terakhir, */
 /*      P sudah dialokasi  */
 /* F.S. Insert P sebagai elemen sesudah elemen beralamat Prec */
-  Next(P) = Next(Prec);
-  Next(Prec) = P;
+  UL_Next(P) = UL_Next(Prec);
+  UL_Next(Prec) = P;
 }
 
 void UL_InsertLast (UnitList *L, ul_address P) {
 /* I.S. Sembarang, P sudah dialokasi  */
 /* F.S. P ditambahkan sebagai elemen terakhir yang baru */
-  ul_address Pt = First(*L);
+  ul_address Pt = UL_First(*L);
   if (Pt == Nil) {
     UL_InsertFirst(L,P);
   }
   else {
-    while (Next(Pt) != Nil) {
-      Pt = Next(Pt);
+    while (UL_Next(Pt) != Nil) {
+      Pt = UL_Next(Pt);
     }
-    Next(Pt) = P;
+    UL_Next(Pt) = P;
   }
 }
 
@@ -155,8 +155,8 @@ void UL_DelFirst (UnitList *L, ul_address *P) {
 /* F.S. P adalah alamat elemen pertama list sebelum penghapusan */
 /*      Elemen list berkurang satu (mungkin menjadi kosong) */
 /* First element yg baru adalah suksesor elemen pertama yang lama */
-  *P = First(*L);
-  First(*L) = Next(*P);
+  *P = UL_First(*L);
+  UL_First(*L) = UL_Next(*P);
 }
 
 void UL_DelP (UnitList *L, ul_infotype X) {
@@ -165,14 +165,14 @@ void UL_DelP (UnitList *L, ul_infotype X) {
 /* Maka P dihapus dari list dan di-dealokasi */
 /* Jika tidak ada elemen list dengan Info(P)=X, maka list tetap */
 /* List mungkin menjadi kosong karena penghapusan */
-  ul_address Pt = First(*L);
+  ul_address Pt = UL_First(*L);
   ul_address PrevPt = Nil;
   boolean found = false;
   while ((Pt != Nil) && !found) {
-    found = EQ(Loc(Info(Pt)),Loc(X));
+    found = EQ(Loc(UL_Info(Pt)),Loc(X));
     if (!found) {
       PrevPt = Pt;
-      Pt = Next(Pt);
+      Pt = UL_Next(Pt);
     }
   }
   if (found) {
@@ -180,7 +180,7 @@ void UL_DelP (UnitList *L, ul_infotype X) {
       UL_DelFirst(L,&Pt);
     }
     else {
-      Next(PrevPt) = Next(Pt);
+      UL_Next(PrevPt) = UL_Next(Pt);
     }
     UL_Dealokasi(&Pt);
   }
@@ -192,21 +192,21 @@ void UL_DelLast (UnitList *L, ul_address *P) {
 /*      Elemen list berkurang satu (mungkin menjadi kosong) */
 /* Last element baru adalah predesesor elemen pertama yg lama, */
 /* jika ada */
-  ul_address Pt = First(*L);
+  ul_address Pt = UL_First(*L);
   ul_address PrevPt = Nil;
   if (Pt == Nil) {
     UL_DelFirst(L,P);
   }
   else {
-    while (Next(Pt) != Nil) {
+    while (UL_Next(Pt) != Nil) {
       PrevPt = Pt;
-      Pt = Next(Pt);
+      Pt = UL_Next(Pt);
     }
     if (PrevPt == Nil) {
       UL_DelFirst(L,P);
     }
     else {
-      Next(PrevPt) = Nil;
+      UL_Next(PrevPt) = Nil;
       *P = Pt;
     }
   }
@@ -216,8 +216,8 @@ void UL_DelAfter (UnitList *L, ul_address *Pdel, ul_address Prec) {
 /* I.S. List tidak kosong. Prec adalah anggota list  */
 /* F.S. Menghapus Next(Prec): */
 /*      Pdel adalah alamat elemen list yang dihapus  */
-  *Pdel = Next(Prec);
-  Next(Prec) = Next(*Pdel);
+  *Pdel = UL_Next(Prec);
+  UL_Next(Prec) = UL_Next(*Pdel);
 }
 
 /****************** PROSES SEMUA ELEMEN LIST ******************/
@@ -232,10 +232,10 @@ void UL_DelAfter (UnitList *L, ul_address *Pdel, ul_address Prec) {
 int UL_NbElmt (UnitList L) {
 /* Mengirimkan banyaknya elemen list; mengirimkan 0 jika list kosong */
   int count = 0;
-  ul_address Pt = First(L);
+  ul_address Pt = UL_First(L);
   while (Pt != Nil) {
     count++;
-    Pt = Next(Pt);
+    Pt = UL_Next(Pt);
   }
   return count;
 }

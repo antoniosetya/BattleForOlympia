@@ -20,7 +20,8 @@ void ChangeUnit(Player P,Unit *CurrUnit){
 	UnitList U=Units(P);
 	ul_address N=First(U); 
 	if(UL_IsEmpty(U)){
-		printf("You don't have any unit to select. \n");	
+		printf("You don't have any unit to select. \n");
+		CurrUnit = Nil;	
 	} else {
 		printf("=======LIST OF UNITS=======\n");
 		while(N!=Nil){
@@ -31,17 +32,16 @@ void ChangeUnit(Player P,Unit *CurrUnit){
 			N = Next(N);
 			num++;
 		}
+		printf("Please enter the number of unit you want to select : ");
+		scanf("%d",&pil);
+		num = 1;
+		N = First(U);
+		while(num < pil){
+			N = Next(N);
+			num++;
+		}
+		printf("You're now selected ");
+		PrintUnitType(Info(N));
+		*CurrUnit = Info(N);
 	}
-
-	printf("Please enter the number of unit you want to select : ");
-	scanf("%d",&pil);
-	num = 1;
-	N = First(U);
-	while(num < pil){
-		N = Next(N);
-		num++;
-	}
-	printf("You're now selected ");
-	PrintUnitType(Info(N));
-	*CurrUnit = Info(N);
 }
