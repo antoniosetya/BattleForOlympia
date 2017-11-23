@@ -278,29 +278,33 @@ void initialize_game(boolean NewGame,char *SaveFile) {
     Absis(tempC)--; Ordinat(tempC)--;
     UpdateBuildingOnMap(&Map_Data,tempC,'C',2);
     /* Randomize the occurence of a village */
-    /* int NVil = (row * col) / 12;
+    int NVil = (row * col) / 12;
     int j;
     threshold = 0.93;
     POINT temp;
+    B_Data tempVil;
     do {
       for (i = 1;(i <= row) && (NVil > 0);i++) {
         for (j = 1;(j <= col) && (NVil > 0);j++) {
           random = randomFloat();
-          if ((random > threshold) && (Map_Data.BData.Type != 'N')) {
-            temp = MakePOINT(i,j);
-            VL_InsVFirst(&FreeVillage,temp);
+          if ((random > threshold) && (Elmt(Map_Data,j,i).BData.Type == 'N')) {
+            temp = MakePOINT(j,i);
+            tempVil.Type = 'V';
+            tempVil.owner = 0;
+            tempVil.pos = temp;
+            VL_InsVFirst(&FreeVillage,tempVil);
             NVil--;
           }
         }
       }
     }
-    while(NVil > 0); */
+    while(NVil > 0);
     /* Updates the map */
-    /* vl_address Pt = First(FreeVillage);
+    vl_address Pt = VL_First(FreeVillage);
     while (Pt != Nil) {
-      UpdateBuildingOnMap(&Map_Data,UL_Info(Pt),'V',0);
-      Pt = Next(Pt);
-    } */
+      UpdateBuildingOnMap(&Map_Data,VL_Info(Pt).pos,VL_Info(Pt).Type,VL_Info(Pt).owner);
+      Pt = VL_Next(Pt);
+    }
     StartGame();
   }
   else {
