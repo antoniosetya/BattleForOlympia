@@ -174,7 +174,7 @@ void StartGame() {
           printf("Recruit\n");
           break;
         case 5:
-          printf("Attack\n");
+      printf("Attack\n");
           break;
         case 6:
           DrawMAP(Map_Data);
