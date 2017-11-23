@@ -38,7 +38,7 @@ void ViewInfo(MAP M,POINT P){
 			case 'S' : printf("Swordsman \n");	printf("Owned by Player %d\n",Owner(*Elmt(M,i,j).CurUnit));break;
 			case 'W' : printf("White Mage \n");	printf("Owned by Player %d\n",Owner(*Elmt(M,i,j).CurUnit));break;
 		}
-		printf("Health %d/%d | ATK %d \n",HP(*Elmt(M,i,j).CurUnit),MaxHP(*Elmt(M,i,j).CurUnit),Attack(*Elmt(M,i,j).CurUnit));
+		printf("Health %d/%d | ATK %d | DEF %d\n",HP(*Elmt(M,i,j).CurUnit),MaxHP(*Elmt(M,i,j).CurUnit),Attack(*Elmt(M,i,j).CurUnit),Def(*Elmt(M,i,j).CurUnit));
 	}
 }
 

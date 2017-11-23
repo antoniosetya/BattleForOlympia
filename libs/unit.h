@@ -11,6 +11,7 @@ typedef struct {
     int HP;
     int Atk;
     char AtkType;
+    int def;
     int maxStep;
     int steps;
     boolean CanAttack;
@@ -25,6 +26,7 @@ typedef struct {
 #define HP(P) (P).HP
 #define Attack(P) (P).Atk
 #define AttackType(P) (P).AtkType
+#define Def(P) (P).def
 #define MaxSteps(P) (P).maxStep
 #define Steps(P) (P).steps
 #define AtkState(P) (P).CanAttack

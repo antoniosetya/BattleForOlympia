@@ -8,6 +8,7 @@ void InitUnit (Unit *U, Unit Template, int Owner, POINT Loc) {
     HP(*U) = MaxHP(*U);
     Attack(*U) = Attack(Template);
     AttackType(*U) = AttackType(Template);
+    Def(*U) = Def(Template);
     MaxSteps(*U) = MaxSteps(Template);
     Steps(*U) = 0;
     AtkState(*U) = false;
