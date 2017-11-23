@@ -22,10 +22,11 @@ void START(char *filename);
           Jika CC = MARK maka EOP akan menyala (true) */
 
 void ADV();
-/* Pita dimajukan satu karakter. 
+/* Pita dimajukan satu karakter.
    I.S. : Karakter pada jendela = CC, CC != MARK
-   F.S. : CC adalah karakter berikutnya dari CC yang lama, 
+   F.S. : CC adalah karakter berikutnya dari CC yang lama,
           CC mungkin = MARK
           Jika  CC = MARK maka EOP akan menyala (true) */
 
+#include "mesinkar.c"
 #endif

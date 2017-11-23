@@ -1,6 +1,7 @@
 #include "libs/boolean.h"
 #include "libs/unit.h"
 #include "libs/player.h"
+#include "libs/mesinkata.h"
 #include "libs/UnitList.h"
 #include "libs/VilList.h"
 #include "libs/map.h"
@@ -9,7 +10,10 @@
 #include "attack.c"
 #include <stdio.h>
 
+boolean EndKata;
+Kata CKata;
 Player P_Data[3]; /* Redeclaring global extern variable from player.h */
+UTemplate TemplateUnit[4];
 Queue P_Turns;
 Stack Mov_Data;
 MAP Map_Data;
@@ -22,8 +26,7 @@ int main_menu() {
     Returns these codes :
     1 : Start new game
     2 : Loads a previously saved game
-    3 : Exit the program
-*/
+    3 : Exit the program */
     int com;
     printf("\n======================================================================================\n");
     printf("  ____        _   _   _         __              ____  _                       _       \n");
@@ -312,8 +315,46 @@ void initialize_game(boolean NewGame,char *SaveFile) {
   }
 }
 
+void LoadUnitSpecs() {
+/* Loads the unit "templates" into TemplateUnit */
+  STARTKATA("unitstats.txt");
+  /* Keywords
+  Kata Keywords[8];
+  CreateKata(&Keywords[0],"<K>");
+  CreateKata(&Keywords[1],"</K>");
+  CreateKata(&Keywords[2],"<A>");
+  CreateKata(&Keywords[3],"</A>");
+  CreateKata(&Keywords[4],"<S>");
+  CreateKata(&Keywords[5],"</S>");
+  CreateKata(&Keywords[6],"<W>");
+  CreateKata(&Keywords[7],"</W>");
+  CreateKata(&Keywords[8],"M");
+  CreateKata(&Keywords[9],"R");
+  boolean FileValid = true;  */
+  int i = 0;
+  while (!EndKata & FileValid) {
+    TemplateType(TemplateUnit[i]) = CKata.TabKata[2];
+    ADVKATA();
+    TemplateAtkType(TemplateUnit[i]) = CKata.TabKata[1];
+    ADVKATA();
+    TemplateHP(TemplateUnit[i]) = KataToInteger(CKata);
+    ADVKATA();
+    TemplateAtk(TemplateUnit[i]) = KataToInteger(CKata);
+    ADVKATA();
+    TemplateSteps(TemplateUnit[i]) = KataToInteger(CKata);
+    ADVKATA();
+    Price(TemplateUnit[i]) = KataToInteger(CKata);
+    ADVKATA();
+    UpkeepCost(TemplateUnit[i]) = KataToInteger(CKata);
+    ADVKATA();
+    ADVKATA();
+    i++;
+  }
+}
+
 int main() {
     int execode;
+    LoadUnitSpecs();
     do {
       execode = main_menu();
       if (execode == 1) {
