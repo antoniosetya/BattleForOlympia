@@ -8,14 +8,14 @@
 /****************** TEST LIST KOSONG ******************/
 boolean VL_IsEmpty (VilList L) {
 /* Mengirim true jika list kosong */
-  return (First(L) == Nil);
+  return (VL_First(L) == Nil);
 }
 
 /****************** PEMBUATAN LIST KOSONG ******************/
 void VL_CreateEmpty (VilList *L) {
 /* I.S. sembarang             */
 /* F.S. Terbentuk list kosong */
-  First(*L) = Nil;
+  VL_First(*L) = Nil;
 }
 
 /****************** Manajemen Memori ******************/
@@ -27,8 +27,8 @@ vl_address VL_Alokasi (infotype X) {
   vl_address P;
   P = (vl_address) malloc (sizeof(ElmtVilList));
   if (P != Nil) {
-    Info(P) = X;
-    Next(P) = Nil;
+    VL_Info(P) = X;
+    VL_Next(P) = Nil;
   }
   return P;
 }
@@ -51,11 +51,11 @@ void VL_InsVFirst (VilList *L, infotype X) {
   vl_address P = VL_Alokasi(X);
   if (P != Nil) {
     if (VL_IsEmpty(*L)) {
-      First(*L) = P;
+      VL_First(*L) = P;
     }
     else {
-      Next(P) = First(*L);
-      First(*L) = P;
+      VL_Next(P) = VL_First(*L);
+      VL_First(*L) = P;
     }
   }
 }
@@ -68,14 +68,14 @@ void VL_InsVLast (VilList *L, infotype X) {
   vl_address P = VL_Alokasi(X);
   if (P != Nil) {
     if (VL_IsEmpty(*L)) {
-      First(*L) = P;
+      VL_First(*L) = P;
     }
     else {
-      vl_address Pt = First(*L);
-      while(Next(Pt) != Nil) {
-        Pt = Next(Pt);
+      vl_address Pt = VL_First(*L);
+      while(VL_Next(Pt) != Nil) {
+        Pt = VL_Next(Pt);
       }
-      Next(Pt) = P;
+      VL_Next(Pt) = P;
     }
   }
 }
@@ -86,9 +86,9 @@ void VL_DelVFirst (VilList *L, infotype *X) {
 /* F.S. Elemen pertama list dihapus: nilai info disimpan pada X */
 /*      dan alamat elemen pertama di-dealokasi */
   if (!VL_IsEmpty(*L)) {
-    vl_address Pt = First(*L);
-    *X = Info(Pt);
-    First(*L) = Next(Pt);
+    vl_address Pt = VL_First(*L);
+    *X = VL_Info(Pt);
+    VL_First(*L) = VL_Next(Pt);
     VL_Dealokasi(&Pt);
   }
 }
@@ -97,17 +97,17 @@ void VL_DelVLast (VilList *L, infotype *X) {
 /* I.S. list tidak kosong */
 /* F.S. Elemen terakhir list dihapus: nilai info disimpan pada X */
 /*      dan alamat elemen terakhir di-dealokasi */
-  vl_address Pt = First(*L);
-  if (Next(Pt) == Nil) {
+  vl_address Pt = VL_First(*L);
+  if (VL_Next(Pt) == Nil) {
     VL_DelVFirst(L,X);
   }
   else {
-    while(Next(Next(Pt)) != Nil) {
-      Pt = Next(Pt);
+    while(VL_Next(VL_Next(Pt)) != Nil) {
+      Pt = VL_Next(Pt);
     }
-    *X = Info(Next(Pt));
-    VL_Dealokasi(&Next(Pt));
-    Next(Pt) = Nil;
+    *X = VL_Info(VL_Next(Pt));
+    VL_Dealokasi(&VL_Next(Pt));
+    VL_Next(Pt) = Nil;
   }
 }
 
@@ -116,30 +116,30 @@ void VL_DelVLast (VilList *L, infotype *X) {
 void VL_InsertFirst (VilList *L, vl_address P) {
 /* I.S. Sembarang, P sudah dialokasi  */
 /* F.S. Menambahkan elemen ber-address P sebagai elemen pertama */
-  Next(P) = First(*L);
-  First(*L) = P;
+  VL_Next(P) = VL_First(*L);
+  VL_First(*L) = P;
 }
 
 void VL_InsertAfter (VilList *L, vl_address P, vl_address Prec) {
 /* I.S. Prec pastilah elemen list dan bukan elemen terakhir, */
 /*      P sudah dialokasi  */
 /* F.S. Insert P sebagai elemen sesudah elemen beralamat Prec */
-  Next(P) = Next(Prec);
-  Next(Prec) = P;
+  VL_Next(P) = VL_Next(Prec);
+  VL_Next(Prec) = P;
 }
 
 void VL_InsertLast (VilList *L, vl_address P) {
 /* I.S. Sembarang, P sudah dialokasi  */
 /* F.S. P ditambahkan sebagai elemen terakhir yang baru */
-  vl_address Pt = First(*L);
+  vl_address Pt = VL_First(*L);
   if (Pt == Nil) {
     VL_InsertFirst(L,P);
   }
   else {
-    while (Next(Pt) != Nil) {
-      Pt = Next(Pt);
+    while (VL_Next(Pt) != Nil) {
+      Pt = VL_Next(Pt);
     }
-    Next(Pt) = P;
+    VL_Next(Pt) = P;
   }
 }
 
@@ -149,8 +149,8 @@ void VL_DelFirst (VilList *L, vl_address *P) {
 /* F.S. P adalah alamat elemen pertama list sebelum penghapusan */
 /*      Elemen list berkurang satu (mungkin menjadi kosong) */
 /* First element yg baru adalah suksesor elemen pertama yang lama */
-  *P = First(*L);
-  First(*L) = Next(*P);
+  *P = VL_First(*L);
+  VL_First(*L) = VL_Next(*P);
 }
 
 void VL_DelP (VilList *L, infotype X) {
@@ -159,14 +159,14 @@ void VL_DelP (VilList *L, infotype X) {
 /* Maka P dihapus dari list dan di-dealokasi */
 /* Jika tidak ada elemen list dengan Info(P)=X, maka list tetap */
 /* List mungkin menjadi kosong karena penghapusan */
-  vl_address Pt = First(*L);
+  vl_address Pt = VL_First(*L);
   vl_address PrevPt = Nil;
   boolean found = false;
   while ((Pt != Nil) && !found) {
-    found = EQ(Info(Pt).pos,X.pos);
+    found = EQ(VL_Info(Pt).pos,X.pos);
     if (!found) {
       PrevPt = Pt;
-      Pt = Next(Pt);
+      Pt = VL_Next(Pt);
     }
   }
   if (found) {
@@ -174,7 +174,7 @@ void VL_DelP (VilList *L, infotype X) {
       VL_DelFirst(L,&Pt);
     }
     else {
-      Next(PrevPt) = Next(Pt);
+      VL_Next(PrevPt) = VL_Next(Pt);
     }
     VL_Dealokasi(&Pt);
   }
@@ -186,21 +186,21 @@ void VL_DelLast (VilList *L, vl_address *P) {
 /*      Elemen list berkurang satu (mungkin menjadi kosong) */
 /* Last element baru adalah predesesor elemen pertama yg lama, */
 /* jika ada */
-  vl_address Pt = First(*L);
+  vl_address Pt = VL_First(*L);
   vl_address PrevPt = Nil;
   if (Pt == Nil) {
     VL_DelFirst(L,P);
   }
   else {
-    while (Next(Pt) != Nil) {
+    while (VL_Next(Pt) != Nil) {
       PrevPt = Pt;
-      Pt = Next(Pt);
+      Pt = VL_Next(Pt);
     }
     if (PrevPt == Nil) {
       VL_DelFirst(L,P);
     }
     else {
-      Next(PrevPt) = Nil;
+      VL_Next(PrevPt) = Nil;
       *P = Pt;
     }
   }
@@ -208,10 +208,10 @@ void VL_DelLast (VilList *L, vl_address *P) {
 
 void VL_DelAfter (VilList *L, vl_address *Pdel, vl_address Prec) {
 /* I.S. List tidak kosong. Prec adalah anggota list  */
-/* F.S. Menghapus Next(Prec): */
+/* F.S. Menghapus VL_Next(Prec): */
 /*      Pdel adalah alamat elemen list yang dihapus  */
-  *Pdel = Next(Prec);
-  Next(Prec) = Next(*Pdel);
+  *Pdel = VL_Next(Prec);
+  VL_Next(Prec) = VL_Next(*Pdel);
 }
 
 /****************** PROSES SEMUA ELEMEN LIST ******************/
@@ -226,10 +226,10 @@ void VL_DelAfter (VilList *L, vl_address *Pdel, vl_address Prec) {
 int VL_NbElmt (VilList L) {
 /* Mengirimkan banyaknya elemen list; mengirimkan 0 jika list kosong */
   int count = 0;
-  vl_address Pt = First(L);
+  vl_address Pt = VL_First(L);
   while (Pt != Nil) {
     count++;
-    Pt = Next(Pt);
+    Pt = VL_Next(Pt);
   }
   return count;
 }

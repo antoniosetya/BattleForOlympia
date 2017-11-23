@@ -6,7 +6,7 @@
 #include "libs/map.h"
 #include "libs/queue.h"
 #include "libs/stackt.h"
-#include "libs/attack.c"
+#include "attack.c"
 #include <stdio.h>
 
 Player P_Data[3]; /* Redeclaring global extern variable from player.h */
@@ -71,20 +71,20 @@ void SaveGame() {
     fprintf(fs,"Gold : %d\n",Gold(P_Data[i]));
     fprintf(fs,"<UNITS>\n");
     if (!UL_IsEmpty(Units(P_Data[i]))) {
-      ul_address Pt = First(Units(P_Data[i]));
+      ul_address Pt = UL_First(Units(P_Data[i]));
       while (Pt != Nil) {
-        fprintf(fs,"%c | %d | %d | %d | %c |",UnitType( Info(Pt)),MaxHP(Info(Pt)),HP( Info(Pt)),Attack( Info(Pt)),AttackType( Info(Pt)));
-        fprintf(fs,"%d | %d | %d | %d %d | %d | %.2f\n",MaxSteps( Info(Pt)),Steps( Info(Pt)),AtkState( Info(Pt)),Absis(Loc( Info(Pt))),Ordinat(Loc( Info(Pt))),Owner( Info(Pt)),AtkProb( Info(Pt)));
-        Pt = Next(Pt);
+        fprintf(fs,"%c | %d | %d | %d | %c |",UnitType(UL_Info(Pt)),MaxHP(UL_Info(Pt)),HP( UL_Info(Pt)),Attack( UL_Info(Pt)),AttackType( UL_Info(Pt)));
+        fprintf(fs,"%d | %d | %d | %d %d | %d | %.2f\n",MaxSteps( UL_Info(Pt)),Steps( UL_Info(Pt)),AtkState( UL_Info(Pt)),Absis(Loc( UL_Info(Pt))),Ordinat(Loc( UL_Info(Pt))),Owner( UL_Info(Pt)),AtkProb( UL_Info(Pt)));
+        Pt = UL_Next(Pt);
       }
     }
     fprintf(fs,"</UNITS>\n");
     fprintf(fs,"<VILLAGES>\n");
     if (!VL_IsEmpty(Villages(P_Data[i]))) {
-      vl_address PtVL = First(Villages(P_Data[i]));
+      vl_address PtVL = VL_First(Villages(P_Data[i]));
       while (PtVL != Nil) {
-        fprintf(fs,"%d %d\n",Absis(Info(PtVL).pos),Ordinat(Info(PtVL).pos));
-        PtVL = Next(PtVL);
+        fprintf(fs,"%d %d\n",Absis(VL_Info(PtVL).pos),Ordinat(VL_Info(PtVL).pos));
+        PtVL = VL_Next(PtVL);
       }
     }
     fprintf(fs,"</VILLAGES>\n");

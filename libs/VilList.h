@@ -23,9 +23,9 @@ typedef struct {
 /* List kosong : First(L) = Nil */
 /* Setiap elemen dengan address P dapat diacu Info(P), Next(P) */
 /* Elemen terakhir list : jika addressnya Last, maka Next(Last)=Nil */
-#define Info(P) (P)->info
-#define Next(P) (P)->next
-#define First(L) ((L).First)
+#define VL_Info(P) (P)->info
+#define VL_Next(P) (P)->next
+#define VL_First(L) ((L).First)
 
 /* PROTOTYPE */
 /****************** TEST LIST KOSONG ******************/

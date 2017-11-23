@@ -22,10 +22,10 @@ typedef struct {
 /* List kosong : First(L) = Nil */
 /* Setiap elemen dengan address P dapat diacu Info(P), Next(P) */
 /* Elemen terakhir list : jika addressnya Last, maka Next(Last)=Nil */
-#define Info(P) (P)->info
-#define Next(P) (P)->next
-#define First(L) ((L).First)
-#define Curr(L) ((L).CurrentUnit)
+#define UL_Info(P) (P)->info
+#define UL_Next(P) (P)->next
+#define UL_First(L) ((L).First)
+#define UL_Curr(L) ((L).CurrentUnit)
 /* PROTOTYPE */
 /****************** TEST LIST KOSONG ******************/
 boolean UL_IsEmpty (UnitList L);
