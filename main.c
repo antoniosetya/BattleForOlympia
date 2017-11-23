@@ -12,17 +12,17 @@
 #include "change_unit.c"
 #include <stdio.h>
 
+// Redeclaring global extern variable from mesinkata.h
 boolean EndKata;
 Kata CKata;
-Player P_Data[3]; /* Redeclaring global extern variable from player.h */
-UTemplate TemplateUnit[4];
-Queue P_Turns;
-Stack Mov_Data;
-MAP Map_Data;
-int CurrPlayer;
-VilList FreeVillage;
-ul_address Curr_Unit_Adr;
-UnitList Unit_List;
+// Redeclaring global extern variable from player.h
+Player P_Data[3];
+UTemplate TemplateUnit[4]; // Contains template units
+Queue P_Turns; // Stores turns of the player
+Stack Mov_Data; // Stores movement data of a unit
+MAP Map_Data; // Stores map data
+int CurrPlayer; // Stores which player are playing right now
+VilList FreeVillage; // Lists all available/empty villages
 
 int main_menu() {
 /*  Shows the main menu of the program when the program starts for the first time
@@ -104,41 +104,25 @@ void SaveGame() {
   printf("Done writing to %s.\n",filename);
 }
 
-int ProcessGameCommand(char *in) {
-  int val;
-  if ((in[0] == 'M') && (in[1] == 'O') && (in[2] == 'V') && (in[3] == 'E') && (in[4] == '\0')) {
-    val = 1;
+int ProcessGameCommand(Kata in) {
+  int val = 1;
+  Kata tempKey[11];
+  CreateKata(&tempKey[1],"MOVE");
+  CreateKata(&tempKey[2],"UNDO");
+  CreateKata(&tempKey[3],"CHANGE_UNIT");
+  CreateKata(&tempKey[4],"RECRUIT");
+  CreateKata(&tempKey[5],"ATTACK");
+  CreateKata(&tempKey[6],"MAP");
+  CreateKata(&tempKey[7],"INFO");
+  CreateKata(&tempKey[8],"END_TURN");
+  CreateKata(&tempKey[9],"SAVE");
+  CreateKata(&tempKey[10],"EXIT");
+  boolean found = false;
+  while ((val < 11) && !found) {
+    found = IsKataSama(in,tempKey[val]);
+    if (!found) val++;
   }
-  else if ((in[0] == 'M') && (in[1] == 'A') && (in[2] == 'P') && (in[3] == '\0')) {
-    val = 6;
-  }
-  else if ((in[0] == 'U') && (in[1] == 'N') && (in[2] == 'D') && (in[3] == 'O') && (in[4] == '\0')) {
-    val = 2;
-  }
-  else if ((in[0] == 'C') && (in[1] == 'H') && (in[2] == 'A') && (in[3] == 'N') && (in[4] == 'G') && (in[5] == 'E') && (in[6] == '_') && (in[7] == 'U') && (in[8] == 'N') && (in[9] == 'I') && (in[10] == 'T') && (in[11] == '\0')) {
-    val = 3;
-  }
-  else if ((in[0] == 'R') && (in[1] == 'E') && (in[2] == 'C') && (in[3] == 'R') && (in[4] == 'U') && (in[5] == 'I') && (in[6] == 'T') && (in[7] == '\0')) {
-    val = 4;
-  }
-  else if ((in[0] == 'A') && (in[1] == 'T') && (in[2] == 'T') && (in[3] == 'A') && (in[4] == 'C') && (in[5] == 'K') && (in[6] == '\0')) {
-    val = 5;
-  }
-  else if ((in[0] == 'I') && (in[1] == 'N') && (in[2] == 'F') && (in[3] == 'O') && (in[4] == '\0')) {
-    val = 7;
-  }
-  else if ((in[0] == 'E') && (in[1] == 'N') && (in[2] == 'D') && (in[3] == '_') && (in[4] == 'T') && (in[5] == 'U') && (in[6] == 'R') && (in[7] == 'N') && (in[8] == '\0')) {
-    val = 8;
-  }
-  else if ((in[0] == 'E') && (in[1] == 'X') && (in[2] == 'I') && (in[3] == 'T') && (in[4] == '\0')) {
-      val = 10;
-  }
-  else if ((in[0] == 'S') && (in[1] == 'A') && (in[2] == 'V') && (in[3] == 'E') && (in[4] == '\0')) {
-      val = 9;
-  }
-  else {
-    val = -999;
-  }
+  if (!found) val = -999;
   return val;
 }
 
@@ -154,17 +138,9 @@ void StartGame() {
     do {
       int i = 0;
       printf("What do you want to do? : ");
-      char temp = getchar();
-      while ((temp == '\n') || (temp == ' ')) { /* "Eats" any previous whitespace */
-        temp = getchar();
-      }
-      while ((temp != '\n') && i < 14) {
-        command[i] = temp;
-        i++;
-        temp = getchar();
-      }
-      command[i] = '\0';
-      switch (ProcessGameCommand(command)) {
+      Kata input;
+      BacaKata(&input);
+      switch (ProcessGameCommand(input)) {
         case 1:
           printf("Move\n");
           break;
@@ -172,17 +148,15 @@ void StartGame() {
           printf("Undo\n");
           break;
         case 3:
-          printf("Change_Unit\n");
-          Change_Unit(CurrPlayer,&Curr_Unit_Adr);
-          Unit_List->CurrentUnit = Curr_Unit_Adr;
+          ChangeUnit(CurrPlayer,&UL_Curr(Units(P_Data[CurrPlayer])));
           break;
         case 4:
           printf("Recruit\n");
           break;
         case 5:
-          if(AtkState(UL_Info(UL_Curr(Units(P_Data[CurrPlayer]))))==false){
+          if(AtkState(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))) == false ){
   		       printf("This unit cannot Attack\n");
-  	      } 
+  	      }
   		    else{
             if(CurrPlayer==1){
               attack(&Units(P_Data[CurrPlayer]),&Units(P_Data[2]));
@@ -190,10 +164,10 @@ void StartGame() {
             else{
               attack(&Units(P_Data[CurrPlayer]),&Units(P_Data[1]));
             }
-  		    } 
+  		    }
           break;
         case 6:
-          DrawMAP(Map_Data);
+          DrawMAP(Map_Data,CurrPlayer);
           break;
         case 7:
           printf("Info\n");
@@ -222,13 +196,18 @@ void initialize_game(boolean NewGame,char *SaveFile) {
      If NewGame = True -> Initializes players, buildings, and load unit datas
                           *SaveFile can be anything, recommended to pass null pointer */
   if (NewGame) {
+    // Initialize players
     InitPlayer(&P_Data[1],1);
     InitPlayer(&P_Data[2],2);
+    // Initialize stack and queue
     CreateEmptyStack(&Mov_Data);
     CreateEmptyQueue(&P_Turns);
+    // Initialize free village list
     VL_CreateEmpty(&FreeVillage);
+    // Adds the player to the queue
     Add(&P_Turns,1);
     Add(&P_Turns,2);
+    // Asks the user about the size of the map
     int row, col;
     boolean isValid;
     do {
@@ -238,6 +217,7 @@ void initialize_game(boolean NewGame,char *SaveFile) {
       if (!isValid) printf("Map dimension is not valid! (minimum is 8x8)\n");
     }
     while (!isValid);
+    // Initialize map
     InitMAP(row,col,&Map_Data);
     /* Randomize the position of each player's base.
        Rules : Cannot be on the map's edge for rows, between col 2 - 3. */
@@ -325,6 +305,17 @@ void initialize_game(boolean NewGame,char *SaveFile) {
       UpdateBuildingOnMap(&Map_Data,VL_Info(Pt).pos,VL_Info(Pt).Type,VL_Info(Pt).owner);
       Pt = VL_Next(Pt);
     }
+    /* Generate "kings" for each player, auto-select it, and updates the map */
+    Unit tempKing;
+    InitUnit(&tempKing,TemplateUnit[0],1,Base(P_Data[1]));
+    UL_InsVFirst(&Units(P_Data[1]),tempKing);
+    UL_Curr(Units(P_Data[1])) = UL_First(Units(P_Data[1]));
+    UpdateUnitOnMap(&Map_Data,Base(P_Data[1]),&UL_Info(UL_First(Units(P_Data[1]))));
+    InitUnit(&tempKing,TemplateUnit[0],2,Base(P_Data[2]));
+    UL_InsVFirst(&Units(P_Data[2]),tempKing);
+    UL_Curr(Units(P_Data[2])) = UL_First(Units(P_Data[2]));
+    UpdateUnitOnMap(&Map_Data,Base(P_Data[2]),&UL_Info(UL_First(Units(P_Data[2]))));
+    /* Starts the game */
     StartGame();
   }
   else {
@@ -349,7 +340,7 @@ void LoadUnitSpecs() {
   CreateKata(&Keywords[9],"R");
   boolean FileValid = true;  */
   int i = 0;
-  while (!EndKata & FileValid) {
+  while (!EndKata) {
     TemplateType(TemplateUnit[i]) = CKata.TabKata[2];
     ADVKATA();
     TemplateAtkType(TemplateUnit[i]) = CKata.TabKata[1];

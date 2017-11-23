@@ -7,6 +7,7 @@
 #include "player.h"
 #include "map.h"
 #include "pcolor.h"
+#include "point.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -94,7 +95,7 @@ void CopyMAP (MAP MIn, MAP * MHsl) {
   }
 }
 
-void DrawMAP (MAP M) {
+void DrawMAP (MAP M, int CurrPlayer) {
 /* I.S. M terdefinisi */
 /* F.S. Tergambar M(i,j), dengan nomor kolom dan baris di pinggir map dan format setiap cell :
     *****
@@ -106,6 +107,7 @@ void DrawMAP (MAP M) {
     U = Unit yang ada dalam cell itu */
   int i, j;
   printf("    ");
+  // Prints cell numbers
   for (j = 1;j <= NKol(M); j++) {
     printf(" %3d ",j);
   }
@@ -116,6 +118,7 @@ void DrawMAP (MAP M) {
   printf("\n");
   for (i = 1;i <= NBrs(M); i++) {
     printf("    ");
+    // Prints available building on this cell
     for (j = 1;j <= NKol(M); j++) {
       if (Elmt(M,j,i).BData.Type != 'N') {
         if (Elmt(M,j,i).BData.owner != 0) {
@@ -130,10 +133,18 @@ void DrawMAP (MAP M) {
       }
     }
     printf("\n");
-    printf("%3d ",i);
+    printf("%3d ",i); // Prints row number
+    POINT temp;
+    // Prints any unit that occupy this cell
     for (j = 1;j <= NKol(M); j++) {
+      temp = MakePOINT(j,i);
       if (Elmt(M,j,i).CurUnit != Nil) {
-        printf("* %s%c%s *",P_Data[Owner(*Elmt(M,j,i).CurUnit)].Color,UnitType(*Elmt(M,j,i).CurUnit),NORMAL);
+        if (EQ(temp,Loc(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))))) {
+          printf("* %s%c%s *",GREEN,UnitType(*Elmt(M,j,i).CurUnit),NORMAL);
+        }
+        else {
+          printf("* %s%c%s *",P_Data[Owner(*Elmt(M,j,i).CurUnit)].Color,UnitType(*Elmt(M,j,i).CurUnit),NORMAL);
+        }
       }
       else {
         printf("*   *");
@@ -162,4 +173,16 @@ void UpdateBuildingOnMap (MAP *M, POINT pos, char type, int owner) {
      Elmt(*M,Absis(pos),Ordinat(pos)).BData.owner = owner;
      Elmt(*M,Absis(pos),Ordinat(pos)).BData.pos = pos;
    }
+}
+
+void UpdateUnitOnMap (MAP *M, POINT pos, Unit *TheUnit) {
+/* I.S. M, pos terdefinisi, *TheUnit menunjuk ke unit yang berada di pos
+   F.S. Map terupdate pada posisi tersebut.
+        Jika TheUnit = Nil, maka cell pada posisi tersebut kosong */
+  if ((Absis(pos) > NKol(*M) || (Absis(pos) <= 0)) || ((Ordinat(pos) > NBrs(*M)) || (Ordinat(pos) <= 0))) {
+    printf("Posisi yang ingin diubah diluar area map!\n");
+  }
+  else {
+    Elmt(*M,Absis(pos),Ordinat(pos)).CurUnit = TheUnit;
+  }
 }

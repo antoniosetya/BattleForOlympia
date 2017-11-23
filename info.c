@@ -1,9 +1,9 @@
 #include <stdio.h>
-#include "libs\map.h"
+#include "libs/map.h"
 
 void PrintOwner(MAP M,POINT P){
 /* I.S. Map dan point tertentu terdefinisi */
-/* F.S. Menampilkan info player dari unit atau building di point tersebut */	
+/* F.S. Menampilkan info player dari unit atau building di point tersebut */
 	int i = Absis(P);
 	int j = Ordinat(P);
 	if(Elmt(M,i,j).BData.owner == 0){
@@ -15,7 +15,7 @@ void PrintOwner(MAP M,POINT P){
 
 void ViewInfo(MAP M,POINT P){
 /* I.S. Map dan point tertentu terdefinisi */
-/* F.S. Menampilkan info unit dan building sesuai dengan point tersebut*/	
+/* F.S. Menampilkan info unit dan building sesuai dengan point tersebut*/
 	int i,j;
 	char c;
 	i = Absis(P);
@@ -43,7 +43,7 @@ void ViewInfo(MAP M,POINT P){
 }
 
 void InfoCmd(MAP M){
-/* Menampikan info suatu koordinat tertentu */	
+/* Menampikan info suatu koordinat tertentu */
 	int x,y;
 	POINT P;
 	printf("Enter coordinate of the cell : ");

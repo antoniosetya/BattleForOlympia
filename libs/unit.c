@@ -17,7 +17,7 @@ void InitUnit (Unit *U, UTemplate Template, int Owner, POINT Loc) {
   Def(*U) = TemplateDef(Template);
   MaxSteps(*U) = TemplateSteps(Template);
   Steps(*U) = 0;
-  AtkState(*U) = false;
+  AtkState(*U) = true;
   Loc(*U) = Loc;
   Owner(*U) = Owner;
   float Prob;
@@ -32,4 +32,15 @@ void InitUnit (Unit *U, UTemplate Template, int Owner, POINT Loc) {
     while ((Prob < 0.7) || (Prob > 0.9));
   }
   AtkProb(*U) = Prob;
+}
+
+void PrintUnitType(Unit U){
+/* I.S. Sembarang Unit U terdefinisi*/
+/* F.S. Print tipe Unit U berdasarkan singkatannya*/
+	switch (UnitType(U)){
+		case 'K' : printf("King ");			break;
+		case 'A' : printf("Archer ");		break;
+		case 'S' : printf("Swordsman ");	break;
+		case 'W' : printf("White Mage ");	break;
+	}
 }

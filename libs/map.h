@@ -61,8 +61,8 @@ indeks GetLastIdxKol (MAP M);
 void CopyMAP (MAP MIn, MAP * MHsl);
 /* Melakukan assignment MHsl <- MIn */
 
-void DrawMAP (MAP M);
-/* I.S. M terdefinisi */
+void DrawMAP (MAP M,int CurrPlayer);
+/* I.S. M terdefinisi, CurrPlayer berisi nomor giliran player sekarang */
 /* F.S. Tergambar M(i,j), dengan format cell :
     *****
     * K *
@@ -70,12 +70,16 @@ void DrawMAP (MAP M);
     *   *
     *****
     K = Bangunan yang ada di cell map. Jika K = N (Normal), diprint kosong
-    U = Unit yang ada dalam cell itu. Jika tidak ada unit, diprint kosong */
+    U = Unit yang ada dalam cell itu. Jika tidak ada unit, diprint kosong
+        Jika U = CurrentUnit, maka akan diprint dengan warna hijau */
 
 void UpdateBuildingOnMap (MAP *M, POINT pos, char type, int owner);
 /* I.S. M, pos terdefinisi, type dan owner sembarang
    F.S. Map pada posisi pos akan diupdate dengan value Type = type, owner = owner */
 
-
+void UpdateUnitOnMap (MAP *M, POINT pos, Unit *TheUnit);
+/* I.S. M, pos terdefinisi, *TheUnit menunjuk ke unit yang berada di pos
+   F.S. Map terupdate pada posisi tersebut.
+        Jika TheUnit = Nil, maka cell pada posisi tersebut kosong */
 #include "map.c"
 #endif

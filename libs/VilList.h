@@ -16,7 +16,7 @@ typedef struct VL_tElmtlist {
 	vl_address next;
 } ElmtVilList;
 typedef struct {
-	vl_address First;
+	vl_address First; // The actual list
 } VilList;
 
 /* Definisi list : */

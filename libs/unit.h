@@ -29,7 +29,7 @@ typedef struct {
   int maxSteps;
   int Price;
   int UpkeepCost;
-} UTemplate;
+} UTemplate; // used for recruiting
 
 /* You can use these selectors to access "Unit" data struct */
 #define UnitType(P) (P).type
@@ -58,5 +58,8 @@ typedef struct {
 void InitUnit (Unit *U,UTemplate Template, int Owner, POINT Loc);
 /* Initialize a new unit for a player based on a template */
 
+void PrintUnitType(Unit U);
+/* I.S. Sembarang Unit U terdefinisi*/
+/* F.S. Print tipe Unit U berdasarkan singkatannya*/
 #include "unit.c"
 #endif

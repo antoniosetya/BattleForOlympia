@@ -14,8 +14,8 @@ typedef struct UL_tElmtlist {
 	ul_address next;
 } ElmtUnitList;
 typedef struct {
-	ul_address First;
-	ul_address CurrentUnit;
+	ul_address First; // The actual unit list
+	ul_address CurrentUnit; // Current selected unit (of a player, because it's always attached to a player)
 } UnitList;
 
 /* Definisi list : */
@@ -24,8 +24,9 @@ typedef struct {
 /* Elemen terakhir list : jika addressnya Last, maka Next(Last)=Nil */
 #define UL_Info(P) (P)->info
 #define UL_Next(P) (P)->next
-#define UL_First(L) ((L).First)
-#define UL_Curr(L) ((L).CurrentUnit)
+#define UL_First(L) (L).First
+#define UL_Curr(L) (L).CurrentUnit
+
 /* PROTOTYPE */
 /****************** TEST LIST KOSONG ******************/
 boolean UL_IsEmpty (UnitList L);
@@ -106,7 +107,7 @@ void UL_DelAfter (UnitList *L, ul_address *Pdel, ul_address Prec);
 /*      Pdel adalah alamat elemen list yang dihapus  */
 
 /****************** PROSES SEMUA ELEMEN LIST ******************/
-/* void PrintInfo (UnitList L);*/
+/* void PrintInfo (UnitList L);
 /* I.S. List mungkin kosong */
 /* F.S. Jika list tidak kosong, iai list dicetak ke kanan: [e1,e2,...,en] */
 /* Contoh : jika ada tiga elemen bernilai 1, 20, 30 akan dicetak: [1,20,30] */

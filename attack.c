@@ -7,23 +7,6 @@ float randomFloat(){
      return r;
 }
 
-void PrintUnitType(Unit P){
-switch (UnitType(P)){
-			case 'K' :
-				printf("King ");
-				break;
-			case 'A' :
-				printf("Archer ");
-				break;
-			case 'S' :
-				printf("Swordsman ");
-				break;
-			case 'W' :
-				printf("White Mage ");
-				break;
-		}
-}
-
 void attack(UnitList *P1,UnitList *P2){
 	//I.S. : AtkState(*P1) = True;
 	//F.S : Unit *P1 menyerang Unit *P2,Unit *P2 membalas jika tipe serangan sama.
