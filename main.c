@@ -126,6 +126,54 @@ int ProcessGameCommand(Kata in) {
   return val;
 }
 
+/*
+void Recruit() {
+	if (UnitType(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))) != 'K') {
+		printf("Only King(s) can recruit!\n");
+	}
+	else {
+		POINT castle_p;
+		printf("Enter coordinate of empty castle: ");
+		BacaPOINT(&castle_p);
+		if (Elmt(Map_Data, Absis(castle_p), Ordinat(castle_p)).BData.Type != 'C')
+			printf("There is no castle here!\n");
+		else {
+			if (Elmt(Map_Data, Absis(castle_p), Ordinat(castle_p)).CurUnit != Nil)
+				printf("That castle is occupied!\n");
+			else {
+				int unit_type;
+				printf("=== List of Recruits ===\n");
+				printf("1. Archer | Health 20 | ATK 4 | DEF 1 | 5G\n");
+				printf("2. Swordsman | Health 20 | ATK 3 | DEF 2 | 4G\n");
+				printf("Enter no. of unit you want to recruit: ");
+				scanf("%d",&unit_type);
+
+				while (unit_type < 1 || unit_type > 2) {
+					printf("Input invalid, try again\n");
+					scanf("%d",&unit_type);
+				}
+
+				if (unit_type == 1) {
+					if (Gold(P_Data[CurrPlayer]) < 5)
+						printf("Not enough money\n");
+					else {
+						Gold(P_Data[CurrPlayer]) -= 5;
+						printf("You have recruited an archer!\n");
+					}
+				}
+				else if (unit_type == 2) {
+					if (Gold(P_Data[CurrPlayer]) < 4)
+						printf("Not enough money\n");
+					else
+						Gold(P_Data[CurrPlayer]) -= 4;
+						printf("You have recruited a swordsman!\n");
+				}
+			}
+		}
+	}
+}
+*/
+
 void StartGame() {
   printf("Game will now starting...\n");
   boolean Exit = false;
@@ -175,6 +223,7 @@ void StartGame() {
           break;
         case 8:
           printf("End_Turn\n");
+          //EndTurn = true;
           break;
         case 9:
           SaveGame();
