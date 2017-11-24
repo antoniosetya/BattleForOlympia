@@ -12,6 +12,7 @@
 #include "attack.c"
 #include "info.c"
 #include "change_unit.c"
+#include "recruit.c"
 #include <stdio.h>
 
 #define clear() printf("\033[H\033[J") // Unix-style code to clear screen
