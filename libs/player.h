@@ -26,6 +26,7 @@ typedef struct {
 #define Units(P) (P).Units
 #define Villages(P) (P).Villages
 #define Base(P) (P).Base
+#define Color(P) (P).Color
 
 /* Player data used for the game. Because it's known to be only 2 players, we define it statically */
 extern Player P_Data[3];

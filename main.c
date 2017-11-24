@@ -1,4 +1,5 @@
 #include "libs/boolean.h"
+#include "libs/pcolor.h"
 #include "libs/unit.h"
 #include "libs/player.h"
 #include "libs/buildings.h"
@@ -182,7 +183,7 @@ void StartGame() {
   do {
     Del(&P_Turns,&CurrPlayer); /* Gets whose turn is this */
     Add(&P_Turns,CurrPlayer); /* Push back to the queue */
-    printf("It's player %d's turn!\n",CurrPlayer);
+    printf("%sIt's player %d's turn!%s\n",Color(P_Data[CurrPlayer]),CurrPlayer,NORMAL);
     boolean EndTurn = false;
     do {
       int i = 0;
@@ -482,6 +483,7 @@ void initialize_game(boolean NewGame,char *SaveFile) {
               UpdateUnitOnMap(&Map_Data,Loc(UL_Info(ul_temp)),&UL_Info(ul_temp));
               ADVKATA();
             }
+            UL_Curr(Units(P_Data[1])) = UL_First(Units(P_Data[1]));
           }
           else if (IsKataSama(CKata,keyword[11])) {
             B_Data temp;
@@ -585,6 +587,7 @@ void initialize_game(boolean NewGame,char *SaveFile) {
               UpdateUnitOnMap(&Map_Data,Loc(temp),&UL_Info(ul_temp));
               ADVKATA();
             }
+            UL_Curr(Units(P_Data[2])) = UL_First(Units(P_Data[2]));
           }
           else if (IsKataSama(CKata,keyword[11])) {
             B_Data temp;
