@@ -1,6 +1,7 @@
 #include "libs/boolean.h"
 #include "libs/unit.h"
 #include "libs/player.h"
+#include "libs/buildings.h"
 #include "libs/mesinkata.h"
 #include "libs/UnitList.h"
 #include "libs/VilList.h"
@@ -58,29 +59,28 @@ int main_menu() {
 }
 
 void SaveGame() {
-  char filename[128];
-  printf("Insert file name (max. 128 characters, including .txt) : ");
-  int i = 0;
-  char temp = getchar();
-  while ((temp == '\n') || (temp == ' ')) { /* "Eats" any previous whitespace */
-    temp = getchar();
-  }
-  while ((temp != '\n') && i < 127) {
-    filename[i] = temp;
-    i++;
-    temp = getchar();
-  }
-  filename[i] = '\0';
-  FILE *fs = fopen(filename,"w");
+  Kata filename;
+  printf("Enter the filename (max. 100 characters) : ");
+  BacaKata(&filename);
+  FILE *fs = fopen(filename.TabKata+1,"w");
   fprintf(fs,"CurrentPlayer : %d\n",CurrPlayer);
+  fprintf(fs,"MapSize : %d %d\n",NBrs(Map_Data),NKol(Map_Data));
+  fprintf(fs,"<FREEVILLAGE>\n");
+  vl_address PtFVL = VL_First(FreeVillage);
+  while (PtFVL != Nil) {
+    fprintf(fs,"%d %d\n",Absis(BuildPos(VL_Info(PtFVL))),Ordinat(BuildPos(VL_Info(PtFVL))));
+    PtFVL = VL_Next(PtFVL);
+  }
+  fprintf(fs,"</FREEVILLAGE>\n");
+  int i;
   for (i = 1;i <= 2;i++) {
-    fprintf(fs,"<Player %d>\n",i);
+    fprintf(fs,"<PLAYER%d>\n",i);
     fprintf(fs,"Gold : %d\n",Gold(P_Data[i]));
     fprintf(fs,"<UNITS>\n");
     if (!UL_IsEmpty(Units(P_Data[i]))) {
       ul_address Pt = UL_First(Units(P_Data[i]));
       while (Pt != Nil) {
-        fprintf(fs,"%c | %d | %d | %d | %c |",UnitType(UL_Info(Pt)),MaxHP(UL_Info(Pt)),HP( UL_Info(Pt)),Attack( UL_Info(Pt)),AttackType( UL_Info(Pt)));
+        fprintf(fs,"%c | %d | %d | %d | %c | ",UnitType(UL_Info(Pt)),MaxHP(UL_Info(Pt)),HP( UL_Info(Pt)),Attack( UL_Info(Pt)),AttackType( UL_Info(Pt)));
         fprintf(fs,"%d | %d | %d | %d %d | %d | %.2f\n",MaxSteps( UL_Info(Pt)),Steps( UL_Info(Pt)),AtkState( UL_Info(Pt)),Absis(Loc( UL_Info(Pt))),Ordinat(Loc( UL_Info(Pt))),Owner( UL_Info(Pt)),AtkProb( UL_Info(Pt)));
         Pt = UL_Next(Pt);
       }
@@ -98,10 +98,11 @@ void SaveGame() {
     fprintf(fs,"Income : %d\n",Income(P_Data[i]));
     fprintf(fs,"Upkeep : %d\n",Upkeep(P_Data[i]));
     fprintf(fs,"Base : %d %d\n",Absis(Base(P_Data[i])),Ordinat(Base(P_Data[i])));
-    fprintf(fs,"</PLAYER %d>\n",i);
+    fprintf(fs,"</PLAYER%d>\n",i);
   }
+  fprintf(fs,"*");
   fclose(fs);
-  printf("Done writing to %s.\n",filename);
+  printf("Done writing to ");TulisKata(filename);printf("\n");
 }
 
 int ProcessGameCommand(Kata in) {
@@ -244,15 +245,15 @@ void initialize_game(boolean NewGame,char *SaveFile) {
   /* If NewGame = False -> Reads the file from *SaveFile, then initialize anything else needed
      If NewGame = True -> Initializes players, buildings, and load unit datas
                           *SaveFile can be anything, recommended to pass null pointer */
+  // Initialize players
+  InitPlayer(&P_Data[1],1);
+  InitPlayer(&P_Data[2],2);
+  // Initialize stack and queue
+  CreateEmptyStack(&Mov_Data);
+  CreateEmptyQueue(&P_Turns);
+  // Initialize free village list
+  VL_CreateEmpty(&FreeVillage);
   if (NewGame) {
-    // Initialize players
-    InitPlayer(&P_Data[1],1);
-    InitPlayer(&P_Data[2],2);
-    // Initialize stack and queue
-    CreateEmptyStack(&Mov_Data);
-    CreateEmptyQueue(&P_Turns);
-    // Initialize free village list
-    VL_CreateEmpty(&FreeVillage);
     // Adds the player to the queue
     Add(&P_Turns,1);
     Add(&P_Turns,2);
@@ -364,30 +365,285 @@ void initialize_game(boolean NewGame,char *SaveFile) {
     UL_InsVFirst(&Units(P_Data[2]),tempKing);
     UL_Curr(Units(P_Data[2])) = UL_First(Units(P_Data[2]));
     UpdateUnitOnMap(&Map_Data,Base(P_Data[2]),&UL_Info(UL_First(Units(P_Data[2]))));
-    /* Starts the game */
-    StartGame();
   }
   else {
-    // Loads a file
+    printf("Reading from %s...\n",SaveFile);
+    STARTKATA(SaveFile); // starts reading the file
+    Kata keyword[16];
+    int row, col;
+    CreateKata(&keyword[0],"CurrentPlayer");
+    CreateKata(&keyword[1],"MapSize");
+    CreateKata(&keyword[2],"<FREEVILLAGE>");
+    CreateKata(&keyword[3],"</FREEVILLAGE>");
+    CreateKata(&keyword[4],"<PLAYER1>");
+    CreateKata(&keyword[5],"</PLAYER1>");
+    CreateKata(&keyword[6],"<PLAYER2>");
+    CreateKata(&keyword[7],"</PLAYER2>");
+    CreateKata(&keyword[8],"Gold");
+    CreateKata(&keyword[9],"<UNITS>");
+    CreateKata(&keyword[10],"</UNITS>");
+    CreateKata(&keyword[11],"<VILLAGES>");
+    CreateKata(&keyword[12],"</VILLAGES>");
+    CreateKata(&keyword[13],"Income");
+    CreateKata(&keyword[14],"Upkeep");
+    CreateKata(&keyword[15],"Base");
+    while (!EndKata) {
+      if (IsKataSama(CKata,keyword[0])) {
+        printf("Reading player turns...\n");
+        ADVKATA();
+        ADVKATA();
+        CurrPlayer = KataToInteger(CKata);
+        Add(&P_Turns,CurrPlayer);
+        if (CurrPlayer == 1) {
+          Add(&P_Turns,2);
+        }
+        else {
+          Add(&P_Turns,1);
+        }
+      }
+      else if (IsKataSama(CKata,keyword[1])) {
+        printf("Reading map...\n");
+        ADVKATA();
+        ADVKATA();
+        row = KataToInteger(CKata);
+        ADVKATA();
+        col = KataToInteger(CKata);
+        InitMAP(row,col,&Map_Data);
+      }
+      else if (IsKataSama(CKata,keyword[2])) {
+        printf("Reading building data...\n");
+        VL_CreateEmpty(&FreeVillage);
+        ADVKATA();
+        B_Data temp;
+        BuildType(temp) = 'V';
+        BuildOwner(temp) = 0;
+        while (!IsKataSama(CKata,keyword[3])) {
+          col = KataToInteger(CKata);
+          ADVKATA();
+          row = KataToInteger(CKata);
+          BuildPos(temp) = MakePOINT(col,row);
+          VL_InsVFirst(&FreeVillage,temp);
+          UpdateBuildingOnMap(&Map_Data,BuildPos(temp),BuildType(temp),BuildOwner(temp));
+          ADVKATA();
+        }
+      }
+      else if (IsKataSama(CKata,keyword[4])) {
+        printf("Reading player 1 data...\n");
+        InitPlayer(&P_Data[1],1);
+        ADVKATA();
+        while (!IsKataSama(CKata,keyword[5])) {
+          if (IsKataSama(CKata,keyword[8])){
+            printf("Setting player 1 gold...\n");
+            ADVKATA();
+            ADVKATA();
+            Gold(P_Data[1]) = KataToInteger(CKata);
+          }
+          else if (IsKataSama(CKata,keyword[9])) {
+            printf("Reading player 1 units...\n");
+            UL_CreateEmpty(&Units(P_Data[1]));
+            ADVKATA();
+            Unit temp;
+            while (!IsKataSama(CKata,keyword[10])) {
+              UnitType(temp) = CKata.TabKata[1];
+              ADVKATA();
+              ADVKATA();
+              MaxHP(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              HP(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              Attack(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              AttackType(temp) = CKata.TabKata[1];
+              ADVKATA();
+              ADVKATA();
+              MaxSteps(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              Steps(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              AtkState(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              Absis(Loc(temp)) = KataToInteger(CKata);
+              ADVKATA();
+              Ordinat(Loc(temp)) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              Owner(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              AtkProb(temp) = atof(CKata.TabKata+1);
+              ul_address ul_temp = UL_Alokasi(temp);
+              UL_InsertLast(&Units(P_Data[1]),ul_temp);
+              UpdateUnitOnMap(&Map_Data,Loc(UL_Info(ul_temp)),&UL_Info(ul_temp));
+              ADVKATA();
+            }
+          }
+          else if (IsKataSama(CKata,keyword[11])) {
+            B_Data temp;
+            BuildType(temp) = 'V';
+            BuildOwner(temp) = 1;
+            VL_CreateEmpty(&Villages(P_Data[1]));
+            ADVKATA();
+            printf("Reading player 1 villages...\n");
+            while (!IsKataSama(CKata,keyword[12])) {
+              row = KataToInteger(CKata);
+              ADVKATA();
+              col = KataToInteger(CKata);
+              BuildPos(temp) = MakePOINT(col,row);
+              VL_InsVLast(&Villages(P_Data[1]),temp);
+              UpdateBuildingOnMap(&Map_Data,BuildPos(temp),BuildType(temp),BuildOwner(temp));
+              ADVKATA();
+            }
+          }
+          else if (IsKataSama(CKata,keyword[13])) {
+            ADVKATA();
+            ADVKATA();
+            Income(P_Data[1]) = KataToInteger(CKata);
+          }
+          else if (IsKataSama(CKata,keyword[14])) {
+            ADVKATA();
+            ADVKATA();
+            Upkeep(P_Data[1]) = KataToInteger(CKata);
+          }
+          else if (IsKataSama(CKata,keyword[15])) {
+            printf("Setting player 1 base...\n");
+            ADVKATA();
+            ADVKATA();
+            col = KataToInteger(CKata);
+            ADVKATA();
+            row = KataToInteger(CKata);
+            Base(P_Data[1]) = MakePOINT(col,row);
+            UpdateBuildingOnMap(&Map_Data,Base(P_Data[1]),'T',1);
+            POINT tempC = Base(P_Data[1]);
+            Ordinat(tempC)--;
+            UpdateBuildingOnMap(&Map_Data,tempC,'C',1);
+            Absis(tempC)++; Ordinat(tempC)++;
+            UpdateBuildingOnMap(&Map_Data,tempC,'C',1);
+            Absis(tempC)--; Ordinat(tempC)++;
+            UpdateBuildingOnMap(&Map_Data,tempC,'C',1);
+            Absis(tempC)--; Ordinat(tempC)--;
+            UpdateBuildingOnMap(&Map_Data,tempC,'C',1);
+          }
+          ADVKATA();
+        }
+      }
+      else if (IsKataSama(CKata,keyword[6])) {
+        printf("Reading player 2 data...\n");
+        InitPlayer(&P_Data[2],2);
+        ADVKATA();
+        while (!IsKataSama(CKata,keyword[7])) {
+          if (IsKataSama(CKata,keyword[8])){
+            ADVKATA();
+            ADVKATA();
+            Gold(P_Data[2]) = KataToInteger(CKata);
+          }
+          else if (IsKataSama(CKata,keyword[9])) {
+            UL_CreateEmpty(&Units(P_Data[2]));
+            ADVKATA();
+            Unit temp;
+            while (!IsKataSama(CKata,keyword[10])) {
+              UnitType(temp) = CKata.TabKata[1];
+              ADVKATA();
+              ADVKATA();
+              MaxHP(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              HP(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              Attack(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              AttackType(temp) = CKata.TabKata[1];
+              ADVKATA();
+              ADVKATA();
+              MaxSteps(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              Steps(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              AtkState(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              Absis(Loc(temp)) = KataToInteger(CKata);
+              ADVKATA();
+              Ordinat(Loc(temp)) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              Owner(temp) = KataToInteger(CKata);
+              ADVKATA();
+              ADVKATA();
+              AtkProb(temp) = atof(CKata.TabKata+1);
+              ul_address ul_temp = UL_Alokasi(temp);
+              UL_InsertLast(&Units(P_Data[2]),ul_temp);
+              UpdateUnitOnMap(&Map_Data,Loc(temp),&UL_Info(ul_temp));
+              ADVKATA();
+            }
+          }
+          else if (IsKataSama(CKata,keyword[11])) {
+            B_Data temp;
+            BuildType(temp) = 'V';
+            BuildOwner(temp) = 2;
+            VL_CreateEmpty(&Villages(P_Data[2]));
+            ADVKATA();
+            while (!IsKataSama(CKata,keyword[12])) {
+              row = KataToInteger(CKata);
+              ADVKATA();
+              col = KataToInteger(CKata);
+              BuildPos(temp) = MakePOINT(col,row);
+              VL_InsVLast(&Villages(P_Data[2]),temp);
+              UpdateBuildingOnMap(&Map_Data,BuildPos(temp),BuildType(temp),BuildOwner(temp));
+              ADVKATA();
+            }
+          }
+          else if (IsKataSama(CKata,keyword[13])) {
+            ADVKATA();
+            ADVKATA();
+            Income(P_Data[2]) = KataToInteger(CKata);
+          }
+          else if (IsKataSama(CKata,keyword[14])) {
+            ADVKATA();
+            ADVKATA();
+            Upkeep(P_Data[2]) = KataToInteger(CKata);
+          }
+          else if (IsKataSama(CKata,keyword[15])) {
+            ADVKATA();
+            ADVKATA();
+            col = KataToInteger(CKata);
+            ADVKATA();
+            row = KataToInteger(CKata);
+            Base(P_Data[2]) = MakePOINT(col,row);
+            UpdateBuildingOnMap(&Map_Data,Base(P_Data[2]),'T',2);
+            POINT tempC = Base(P_Data[2]);
+            Ordinat(tempC)--;
+            UpdateBuildingOnMap(&Map_Data,tempC,'C',2);
+            Absis(tempC)++; Ordinat(tempC)++;
+            UpdateBuildingOnMap(&Map_Data,tempC,'C',2);
+            Absis(tempC)--; Ordinat(tempC)++;
+            UpdateBuildingOnMap(&Map_Data,tempC,'C',2);
+            Absis(tempC)--; Ordinat(tempC)--;
+            UpdateBuildingOnMap(&Map_Data,tempC,'C',2);
+          }
+          ADVKATA();
+        }
+      }
+      ADVKATA();
+    }
   }
+  /* Starts the game */
+  StartGame();
 }
 
 void LoadUnitSpecs() {
-/* Loads the unit "templates" into TemplateUnit */
+/* Loads the unit "templates" into TemplateUnit.
+   Hasn't checked for any invalid syntax. */
   STARTKATA("unitstats.txt");
-  /* Keywords
-  Kata Keywords[8];
-  CreateKata(&Keywords[0],"<K>");
-  CreateKata(&Keywords[1],"</K>");
-  CreateKata(&Keywords[2],"<A>");
-  CreateKata(&Keywords[3],"</A>");
-  CreateKata(&Keywords[4],"<S>");
-  CreateKata(&Keywords[5],"</S>");
-  CreateKata(&Keywords[6],"<W>");
-  CreateKata(&Keywords[7],"</W>");
-  CreateKata(&Keywords[8],"M");
-  CreateKata(&Keywords[9],"R");
-  boolean FileValid = true;  */
   int i = 0;
   while (!EndKata) {
     TemplateType(TemplateUnit[i]) = CKata.TabKata[2];
@@ -397,6 +653,7 @@ void LoadUnitSpecs() {
     TemplateHP(TemplateUnit[i]) = KataToInteger(CKata);
     ADVKATA();
     TemplateAtk(TemplateUnit[i]) = KataToInteger(CKata);
+    TemplateDef(TemplateUnit[i]) = 0;
     ADVKATA();
     TemplateSteps(TemplateUnit[i]) = KataToInteger(CKata);
     ADVKATA();
@@ -416,13 +673,13 @@ int main() {
       execode = main_menu();
       if (execode == 1) {
         initialize_game(true,Nil);
+
       }
       else if (execode == 2) {
-        //load_game()
-        //initialize_game(false,<pointer to char[] that contains the filename>);
-        //start_game()
-        //blablabla
-        printf("LOAD GAME\n");
+        Kata filename;
+        printf("Masukkan nama file yang ingin dibaca : ");
+        BacaKata(&filename);
+        initialize_game(false,filename.TabKata+1);
       }
     }
     while (execode != 3);

@@ -10,4 +10,8 @@ typedef struct {
     POINT pos; // Location of this building
 } B_Data;
 
+#define BuildType(P) (P).Type
+#define BuildOwner(P) (P).owner
+#define BuildPos(P) (P).pos
+
 #endif

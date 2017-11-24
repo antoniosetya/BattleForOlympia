@@ -16,12 +16,13 @@ void CreateKata(Kata *K, char *s)
 
   /* ALGORITMA */
   i = 0;
-  while(s[i] != '\0')
+  while((s[i] != '\0') && (i < NMax))
   {
     (*K).TabKata[i+1] = s[i];
     i++;
   }
   (*K).Length = i;
+  (*K).TabKata[i+1] = '\0';
 }
 
 /* INPUT/OUTPUT */
@@ -35,15 +36,20 @@ void BacaKata(Kata *K)
   char C;
 
   /* ALGORTIMA */
-  i=0;
-  scanf(" %c", &C);
-  while ((C != ENTER) && (C != BLANK) && (i < NMax))
-  {
-      i++;
-      (*K).TabKata[i]=C;
-      scanf("%c", &C);
+  i = 1;
+  C = getchar();
+  // Eats the whitespace first
+  while ((C == ENTER) || (C == BLANK)) {
+    C = getchar();
   }
-  (*K).Length = i;
+  while ((C != ENTER) && (C != BLANK) && (i <= NMax))
+  {
+      (*K).TabKata[i] = C;
+      i++;
+      C = getchar();
+  }
+  (*K).Length = i-1;
+  (*K).TabKata[i] = '\0';
 }
 
 void TulisKata (Kata K)
@@ -60,6 +66,10 @@ void TulisKata (Kata K)
   }
 }
 
+int LnKata(Kata K) {
+  // Mengembalikan panjang Kata
+  return K.Length;
+}
 
 /* MESIN KATA */
 void IgnoreBlank()

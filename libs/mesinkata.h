@@ -10,7 +10,7 @@
 #define NMax 100
 
 typedef struct {
-	char TabKata[NMax+1]; /* container penyimpan kata, indeks yang dipakai [1..NMax] */
+	char TabKata[NMax+2]; /* container penyimpan kata, indeks yang dipakai [1..NMax] */
     int Length;
 } Kata;
 
@@ -32,6 +32,9 @@ void BacaKata(Kata *K);
 void TulisKata (Kata K);
 /*I.S. Kata terdefinisi*/
 /*F.S. Kata ditampilkan ke layar*/
+
+int LnKata(Kata K);
+  // Mengembalikan panjang Kata
 
 /* MESIN KATA */
 void IgnoreBlank();
