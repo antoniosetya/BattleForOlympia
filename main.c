@@ -14,6 +14,9 @@
 #include "change_unit.c"
 #include <stdio.h>
 
+#define clear() printf("\033[H\033[J") // Unix-style code to clear screen
+#define gotoxy(x,y) printf("\033[%d;%dH", (x), (y)) // Unix-style code to move cursor
+
 // Redeclaring global extern variable from mesinkata.h
 boolean EndKata;
 Kata CKata;
@@ -33,6 +36,7 @@ int main_menu() {
     1 : Start new game
     2 : Loads a previously saved game
     3 : Exit the program */
+    // clear();
     int com;
     printf("\n======================================================================================\n");
     printf("  ____        _   _   _         __              ____  _                       _       \n");
@@ -106,9 +110,25 @@ void SaveGame() {
   printf("Done writing to ");TulisKata(filename);printf("\n");
 }
 
+void ShowHelp() {
+/* Prints help page */
+  printf("Commands : \n");
+  printf("MOVE : Moves current selected unit.\n");
+  printf("UNDO : Goes back to previous position after moving.\n");
+  printf("CHANGE_UNIT : Select another unit.\n");
+  printf("RECRUIT : Get more units.\n");
+  printf("ATTACK : Attack adjacent enemy units.\n");
+  printf("MAP : Shows the game map\n");
+  printf("INFO : Shows info of a map cell\n");
+  printf("END_TURN : Ends your turn. Pass it along to your enemy!\n");
+  printf("SAVE : Saves current game\n");
+  printf("EXIT : Returns to the main menu\n");
+  printf("HELP : Shows this help page!\n");
+}
+
 int ProcessGameCommand(Kata in) {
   int val = 1;
-  Kata tempKey[11];
+  Kata tempKey[12];
   CreateKata(&tempKey[1],"MOVE");
   CreateKata(&tempKey[2],"UNDO");
   CreateKata(&tempKey[3],"CHANGE_UNIT");
@@ -119,8 +139,9 @@ int ProcessGameCommand(Kata in) {
   CreateKata(&tempKey[8],"END_TURN");
   CreateKata(&tempKey[9],"SAVE");
   CreateKata(&tempKey[10],"EXIT");
+  CreateKata(&tempKey[11],"HELP");
   boolean found = false;
-  while ((val < 11) && !found) {
+  while ((val < 12) && !found) {
     found = IsKataSama(in,tempKey[val]);
     if (!found) val++;
   }
@@ -181,12 +202,26 @@ void StartGame() {
   boolean Exit = false;
   char command[15];
   do {
+    // clear();
     Del(&P_Turns,&CurrPlayer); /* Gets whose turn is this */
     Add(&P_Turns,CurrPlayer); /* Push back to the queue */
     printf("%sIt's player %d's turn!%s\n",Color(P_Data[CurrPlayer]),CurrPlayer,NORMAL);
     boolean EndTurn = false;
     do {
       int i = 0;
+      // Prints essential player's data
+      printf("%sPlayer %d%s | ",Color(P_Data[CurrPlayer]),CurrPlayer,NORMAL);
+      printf("Gold : %d\n",Gold(P_Data[CurrPlayer]));
+      printf("Selected Unit : ");PrintUnitType(UL_Info(UL_Curr(Units(P_Data[CurrPlayer]))));
+      TulisPOINT(Loc(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))));
+      printf(" | ");
+      if (AtkState(UL_Info(UL_Curr(Units(P_Data[CurrPlayer]))))) printf("%sCAN ATTACK%s",GREEN,NORMAL);
+      else printf("%sCANNOT ATTACK%s",RED,NORMAL);
+      printf(" | ");
+      if (Steps(UL_Info(UL_Curr(Units(P_Data[CurrPlayer]))))) printf("%sCAN MOVE%s",GREEN,NORMAL);
+      else printf("%sCANNOT MOVE%s",RED,NORMAL);
+      printf("\n");
+      // Asking for command
       printf("What do you want to do? : ");
       Kata input;
       BacaKata(&input);
@@ -205,7 +240,7 @@ void StartGame() {
           break;
         case 5:
           if(AtkState(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))) == false ){
-  		       printf("This unit cannot Attack\n");
+  		       printf("This unit cannot attack!\n");
   	      }
   		    else{
             if(CurrPlayer==1){
@@ -220,7 +255,6 @@ void StartGame() {
           DrawMAP(Map_Data,CurrPlayer);
           break;
         case 7:
-          printf("Info\n");
           InfoCmd(Map_Data);
           break;
         case 8:
@@ -232,6 +266,9 @@ void StartGame() {
           break;
         case 10:
           Exit = true;
+          break;
+        case 11:
+          ShowHelp();
           break;
         default:
           printf("Wrong command!\n");
@@ -686,6 +723,7 @@ int main() {
       }
     }
     while (execode != 3);
+    // clear();
     /* execode == 3 */
     printf("Program exiting. Until next time, then...!\n");
 }

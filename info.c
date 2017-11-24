@@ -30,7 +30,7 @@ void ViewInfo(MAP M,POINT P){
 	}
 	printf("===== UNIT INFO =====\n");
 	if(Elmt(M,i,j).CurUnit == Nil){
-		printf("You don't have any unit here \n");
+		printf("There is no unit here \n");
 	} else {
 		switch (UnitType(*Elmt(M,i,j).CurUnit)){
 			case 'K' : printf("King \n"); 		printf("Owned by Player %d\n",Owner(*Elmt(M,i,j).CurUnit));break;

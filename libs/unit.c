@@ -16,7 +16,7 @@ void InitUnit (Unit *U, UTemplate Template, int Owner, POINT Loc) {
   AttackType(*U) = TemplateAtkType(Template);
   Def(*U) = TemplateDef(Template);
   MaxSteps(*U) = TemplateSteps(Template);
-  Steps(*U) = 0;
+  Steps(*U) = MaxSteps(*U);
   AtkState(*U) = true;
   Loc(*U) = Loc;
   Owner(*U) = Owner;

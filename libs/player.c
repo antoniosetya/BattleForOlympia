@@ -4,7 +4,7 @@
 
 void InitPlayer(Player *P,int PN) {
 /* Initialize starting values of a player */
-    Gold(*P) = 50;
+    Gold(*P) = 150;
     Income(*P) = 0;
     Upkeep(*P) = 0;
     UL_CreateEmpty(&Units(*P));
