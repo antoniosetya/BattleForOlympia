@@ -13,6 +13,8 @@
 #include "info.c"
 #include "change_unit.c"
 #include "recruit.c"
+#include "move.c"
+#include "undo.c"
 #include <stdio.h>
 
 #define clear() printf("\033[H\033[J") // Unix-style code to clear screen
@@ -208,6 +210,11 @@ void StartGame() {
     Add(&P_Turns,CurrPlayer); /* Push back to the queue */
     printf("%sIt's player %d's turn!%s\n",Color(P_Data[CurrPlayer]),CurrPlayer,NORMAL);
     boolean EndTurn = false;
+	int MovPoint = 2;
+	Stack MovementStack;
+	CreateEmptyStack(&MovementStack);
+	
+			POINT X;
     do {
       int i = 0;
       // Prints essential player's data
@@ -216,6 +223,8 @@ void StartGame() {
       printf("Selected Unit : ");PrintUnitType(UL_Info(UL_Curr(Units(P_Data[CurrPlayer]))));
       TulisPOINT(Loc(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))));
       printf(" | ");
+	  if (Steps(UL_Info(UL_Curr(Units(P_Data[CurrPlayer]))))) printf("Movement Point: %d", MovPoint);
+	  printf(" | ");
       if (AtkState(UL_Info(UL_Curr(Units(P_Data[CurrPlayer]))))) printf("%sCAN ATTACK%s",GREEN,NORMAL);
       else printf("%sCANNOT ATTACK%s",RED,NORMAL);
       printf(" | ");
@@ -228,10 +237,16 @@ void StartGame() {
       BacaKata(&input);
       switch (ProcessGameCommand(input)) {
         case 1:
-          printf("Move\n");
+		  if (MovPoint > 0){
+			MovementStack = MoveCurrUnit(CurrPlayer,&MovPoint,Map_Data,MovementStack);
+			printf("You've successfully moved to "); TulisPOINT(InfoTop(MovementStack)); printf("\n\n");
+		  } else printf("You have no any Movement Point!\n\n");
           break;
         case 2:
-          printf("Undo\n");
+		  if (!IsStackEmpty(MovementStack)){
+			MovementStack = UndoMov(CurrPlayer,&MovPoint,Map_Data,MovementStack);
+			DrawMAP(Map_Data,CurrPlayer);
+		  } else printf("You can't perform UNDO!\n\n");
           break;
         case 3:
           ChangeUnit(CurrPlayer,&UL_Curr(Units(P_Data[CurrPlayer])));
