@@ -38,9 +38,12 @@ void Recruit(int P, MAP *Map_Data) {
 	if (UnitType(UL_Info(UL_Curr(Units(P_Data[P])))) != 'K') {
 		printf("Only King that can recruit unit(s)!\n\n");
 	}
+	else if ((UnitType(UL_Info(UL_Curr(Units(P_Data[P])))) == 'K') && NEQ(Loc(UL_Info(UL_Curr(Units(P_Data[P])))), Base(P_Data[P]))) {
+		printf("King is not at the tower\n\n");
+	}
 	else {
 		if (Gold(P_Data[P]) <= 0)
-			printf("You don't have any gold\n");
+			printf("You don't have any gold\n\n");
 		else {
 			POINT castle_p;
 			boolean cancel = false;
