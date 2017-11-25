@@ -12,16 +12,16 @@ void InitPlayer(Player *P,int PN) {
     (*P).Color = (char *) malloc (10 * sizeof(char));
     switch(PN) {
         case 1:
-            (*P).Color = RED;
+            (*P).Color = MAGENTA;
             break;
         case 2:
             (*P).Color = BLUE;
             break;
         case 3:
-            (*P).Color = MAGENTA;
+            (*P).Color = CYAN;
             break;
         case 4:
-            (*P).Color = CYAN;
+            (*P).Color = YELLOW;
             break;
     }
 }

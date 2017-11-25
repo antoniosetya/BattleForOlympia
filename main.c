@@ -23,7 +23,6 @@ boolean EndKata;
 Kata CKata;
 // Redeclaring global extern variable from player.h
 Player P_Data[3];
-UTemplate TemplateUnit[4]; // Contains template units
 Queue P_Turns; // Stores turns of the player
 Stack Mov_Data; // Stores movement data of a unit
 MAP Map_Data; // Stores map data
@@ -150,54 +149,6 @@ int ProcessGameCommand(Kata in) {
   return val;
 }
 
-/*
-void Recruit() {
-	if (UnitType(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))) != 'K') {
-		printf("Only King(s) can recruit!\n");
-	}
-	else {
-		POINT castle_p;
-		printf("Enter coordinate of empty castle: ");
-		BacaPOINT(&castle_p);
-		if (Elmt(Map_Data, Absis(castle_p), Ordinat(castle_p)).BData.Type != 'C')
-			printf("There is no castle here!\n");
-		else {
-			if (Elmt(Map_Data, Absis(castle_p), Ordinat(castle_p)).CurUnit != Nil)
-				printf("That castle is occupied!\n");
-			else {
-				int unit_type;
-				printf("=== List of Recruits ===\n");
-				printf("1. Archer | Health 20 | ATK 4 | DEF 1 | 5G\n");
-				printf("2. Swordsman | Health 20 | ATK 3 | DEF 2 | 4G\n");
-				printf("Enter no. of unit you want to recruit: ");
-				scanf("%d",&unit_type);
-
-				while (unit_type < 1 || unit_type > 2) {
-					printf("Input invalid, try again\n");
-					scanf("%d",&unit_type);
-				}
-
-				if (unit_type == 1) {
-					if (Gold(P_Data[CurrPlayer]) < 5)
-						printf("Not enough money\n");
-					else {
-						Gold(P_Data[CurrPlayer]) -= 5;
-						printf("You have recruited an archer!\n");
-					}
-				}
-				else if (unit_type == 2) {
-					if (Gold(P_Data[CurrPlayer]) < 4)
-						printf("Not enough money\n");
-					else
-						Gold(P_Data[CurrPlayer]) -= 4;
-						printf("You have recruited a swordsman!\n");
-				}
-			}
-		}
-	}
-}
-*/
-
 void StartGame() {
   printf("Game will now starting...\n");
   boolean Exit = false;
@@ -212,7 +163,16 @@ void StartGame() {
       int i = 0;
       // Prints essential player's data
       printf("%sPlayer %d%s | ",Color(P_Data[CurrPlayer]),CurrPlayer,NORMAL);
-      printf("Gold : %d\n",Gold(P_Data[CurrPlayer]));
+      printf("Gold : %dG | ",Gold(P_Data[CurrPlayer]));
+      int proj = Income(P_Data[CurrPlayer]) - Upkeep(P_Data[CurrPlayer]);
+      printf("Projected Gold : ");
+      if (proj > 0) {
+        printf("%s+",GREEN);
+      }
+      else if (proj < 0) {
+        printf("%s",RED);
+      }
+      printf("%dG%s\n",proj,NORMAL);
       printf("Selected Unit : ");PrintUnitType(UL_Info(UL_Curr(Units(P_Data[CurrPlayer]))));
       TulisPOINT(Loc(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))));
       printf(" | ");
@@ -227,19 +187,19 @@ void StartGame() {
       Kata input;
       BacaKata(&input);
       switch (ProcessGameCommand(input)) {
-        case 1:
+        case 1: // Move
           printf("Move\n");
           break;
-        case 2:
+        case 2: // Undo
           printf("Undo\n");
           break;
-        case 3:
+        case 3: // Change Unit
           ChangeUnit(CurrPlayer,&UL_Curr(Units(P_Data[CurrPlayer])));
           break;
-        case 4:
-          printf("Recruit\n");
+        case 4: // Recruit
+          Recruit(CurrPlayer,&Map_Data);
           break;
-        case 5:
+        case 5: // Attack
           if(AtkState(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))) == false ){
   		       printf("This unit cannot attack!\n");
   	      }
@@ -252,28 +212,29 @@ void StartGame() {
             }
   		    }
           break;
-        case 6:
+        case 6: // Map
           DrawMAP(Map_Data,CurrPlayer);
           break;
-        case 7:
+        case 7: // Info
           InfoCmd(Map_Data);
           break;
-        case 8:
+        case 8: // End_Turn
           printf("End_Turn\n");
           //EndTurn = true;
           break;
-        case 9:
+        case 9: // Save
           SaveGame();
           break;
-        case 10:
+        case 10: // Exit
           Exit = true;
           break;
-        case 11:
+        case 11: // Help
           ShowHelp();
           break;
         default:
           printf("Wrong command!\n");
       }
+      printf("\n");
     }
     while (!EndTurn && !Exit);
   }
@@ -394,16 +355,11 @@ void initialize_game(boolean NewGame,char *SaveFile) {
       UpdateBuildingOnMap(&Map_Data,VL_Info(Pt).pos,VL_Info(Pt).Type,VL_Info(Pt).owner);
       Pt = VL_Next(Pt);
     }
-    /* Generate "kings" for each player, auto-select it, and updates the map */
-    Unit tempKing;
-    InitUnit(&tempKing,TemplateUnit[0],1,Base(P_Data[1]));
-    UL_InsVFirst(&Units(P_Data[1]),tempKing);
-    UL_Curr(Units(P_Data[1])) = UL_First(Units(P_Data[1]));
-    UpdateUnitOnMap(&Map_Data,Base(P_Data[1]),&UL_Info(UL_First(Units(P_Data[1]))));
-    InitUnit(&tempKing,TemplateUnit[0],2,Base(P_Data[2]));
-    UL_InsVFirst(&Units(P_Data[2]),tempKing);
-    UL_Curr(Units(P_Data[2])) = UL_First(Units(P_Data[2]));
-    UpdateUnitOnMap(&Map_Data,Base(P_Data[2]),&UL_Info(UL_First(Units(P_Data[2]))));
+    /* Generate "king" for each player, auto-select it, and updates the map */
+    for (i = 1;i <= 2;i++) {
+      GenerateUnit(&Map_Data,i,'K',Base(P_Data[i]));
+      UL_Curr(Units(P_Data[i])) = UL_First(Units(P_Data[i])); // Because kings will always be the first element of list of units.
+    }
   }
   else {
     printf("Reading from %s...\n",SaveFile);
