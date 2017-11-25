@@ -170,6 +170,7 @@ void StartGame() {
     // clear();
     Del(&P_Turns,&CurrPlayer); /* Gets whose turn is this */
     Add(&P_Turns,CurrPlayer); /* Push back to the queue */
+    CreateEmptyStack(&Mov_Data);
     printf("%sIt's player %d's turn!%s\n",Color(P_Data[CurrPlayer]),CurrPlayer,NORMAL);
     boolean EndTurn = false;
 	  POINT X;
@@ -211,12 +212,13 @@ void StartGame() {
           break;
         case 2:
     		  if (!IsStackEmpty(Mov_Data)){
-    			Mov_Data = UndoMov(CurrPlayer,&Steps(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))),Map_Data,Mov_Data);
-    			DrawMAP(Map_Data,CurrPlayer);
+            UndoMov(CurrPlayer,&Map_Data,&Mov_Data);
+            DrawMAP(Map_Data,CurrPlayer);
     		  } else printf("You can't perform UNDO!\n\n");
           break;
         case 3: // Change Unit
           ChangeUnit(CurrPlayer,&UL_Curr(Units(P_Data[CurrPlayer])));
+          CreateEmptyStack(&Mov_Data);
           break;
         case 4: // Recruit
           Recruit(CurrPlayer,&Map_Data);
@@ -232,6 +234,7 @@ void StartGame() {
             else{
               PlayerWin = attack(&Map_Data,&Units(P_Data[CurrPlayer]),&Units(P_Data[1]));
             }
+            CreateEmptyStack(&Mov_Data);
   		    }
           break;
         case 6: // Map
@@ -254,8 +257,8 @@ void StartGame() {
           ShowHelp();
           break;
         case 12:
-          // printf("Next_Unit\n");
-          NextUnit(&Units(P_Data[CurrPlayer]));
+          if (NextUnit(&Units(P_Data[CurrPlayer])))
+            CreateEmptyStack(&Mov_Data);
           break;
         default:
           printf("Wrong command!\n");
@@ -280,8 +283,7 @@ void initialize_game(boolean NewGame,char *SaveFile) {
   // Initialize players
   InitPlayer(&P_Data[1],1);
   InitPlayer(&P_Data[2],2);
-  // Initialize stack and queue
-  CreateEmptyStack(&Mov_Data);
+  // Initialize queue
   CreateEmptyQueue(&P_Turns);
   // Initialize free village list
   VL_CreateEmpty(&FreeVillage);

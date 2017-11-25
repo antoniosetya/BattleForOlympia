@@ -99,13 +99,12 @@ void MoveCurrUnit(int P, int * MovPoint, MAP *MovMAP, Stack *MovStack){
 		temp = MakePOINT(CoorX,CoorY);
 		currLoc = MakePOINT(currX,currY);
     float distance = sqrt(pow((Absis(temp)-currX),2) + pow((Ordinat(temp)-currY),2));
-		if (distance <= Steps(UL_Info(Ptemp))) {
+		if (distance <= Steps(UL_Info(Ptemp)) && (Elmt(*MovMAP,Absis(temp),Ordinat(temp)).CurUnit == Nil)) {
 			UpdateUnitOnMap(MovMAP,temp,&UL_Info(UL_Curr(Units(P_Data[P]))));
 			UpdateUnitOnMap(MovMAP,currLoc,Nil);
 			Loc(UL_Info(UL_Curr(Units(P_Data[P])))) = temp;
 			Push(MovStack,currLoc);
-			Push(MovStack,temp);
-			Steps(UL_Info(Ptemp))-=distance;
+			Steps(UL_Info(Ptemp)) -= ceil(distance);
       printf("Successfully moved to ");TulisPOINT(temp);printf("\n");
 		}
     else
