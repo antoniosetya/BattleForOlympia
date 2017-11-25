@@ -1,8 +1,35 @@
 #include "libs/map.h"
+#include "libs/mesinkata.h"
 #include <stdio.h>
 
 Player P_Data[3]; //Redefining global extern variable from player.h
 UTemplate TemplateUnit[4]; // Contains template units
+
+void LoadUnitSpecs() {
+/* Loads the unit "templates" into TemplateUnit.
+   Hasn't checked for any invalid syntax. */
+  STARTKATA("unitstats.txt");
+  int i = 0;
+  while (!EndKata) {
+    TemplateType(TemplateUnit[i]) = CKata.TabKata[2];
+    ADVKATA();
+    TemplateAtkType(TemplateUnit[i]) = CKata.TabKata[1];
+    ADVKATA();
+    TemplateHP(TemplateUnit[i]) = KataToInteger(CKata);
+    ADVKATA();
+    TemplateAtk(TemplateUnit[i]) = KataToInteger(CKata);
+    TemplateDef(TemplateUnit[i]) = 0;
+    ADVKATA();
+    TemplateSteps(TemplateUnit[i]) = KataToInteger(CKata);
+    ADVKATA();
+    Price(TemplateUnit[i]) = KataToInteger(CKata);
+    ADVKATA();
+    UpkeepCost(TemplateUnit[i]) = KataToInteger(CKata);
+    ADVKATA();
+    ADVKATA();
+    i++;
+  }
+}
 
 void GenerateUnit(MAP *Map_Data, int P, char type, POINT loc) {
 /* Generetes desired unit and updates the map */

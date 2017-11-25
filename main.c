@@ -65,12 +65,16 @@ int main_menu() {
 }
 
 void SaveGame() {
+  /* Saves the current state of the game */
   Kata filename;
+  // Asks the filename
   printf("Enter the filename (max. 100 characters) : ");
   BacaKata(&filename);
   FILE *fs = fopen(filename.TabKata+1,"w");
-  fprintf(fs,"CurrentPlayer : %d\n",CurrPlayer);
-  fprintf(fs,"MapSize : %d %d\n",NBrs(Map_Data),NKol(Map_Data));
+  // Starting to write to file
+  fprintf(fs,"CurrentPlayer : %d\n",CurrPlayer); // Writing current player
+  fprintf(fs,"MapSize : %d %d\n",NBrs(Map_Data),NKol(Map_Data)); // Writing map dimension
+  // Writing the list of unoccupied villages
   fprintf(fs,"<FREEVILLAGE>\n");
   vl_address PtFVL = VL_First(FreeVillage);
   while (PtFVL != Nil) {
@@ -79,19 +83,22 @@ void SaveGame() {
   }
   fprintf(fs,"</FREEVILLAGE>\n");
   int i;
+  // Writing player data
   for (i = 1;i <= 2;i++) {
     fprintf(fs,"<PLAYER%d>\n",i);
-    fprintf(fs,"Gold : %d\n",Gold(P_Data[i]));
+    fprintf(fs,"Gold : %d\n",Gold(P_Data[i])); // Writing current gold in possession
+    // Writing the list of owned units
     fprintf(fs,"<UNITS>\n");
     if (!UL_IsEmpty(Units(P_Data[i]))) {
       ul_address Pt = UL_First(Units(P_Data[i]));
       while (Pt != Nil) {
-        fprintf(fs,"%c | %d | %d | %d | %c | ",UnitType(UL_Info(Pt)),MaxHP(UL_Info(Pt)),HP( UL_Info(Pt)),Attack( UL_Info(Pt)),AttackType( UL_Info(Pt)));
-        fprintf(fs,"%d | %d | %d | %d %d | %d | %.2f\n",MaxSteps( UL_Info(Pt)),Steps( UL_Info(Pt)),AtkState( UL_Info(Pt)),Absis(Loc( UL_Info(Pt))),Ordinat(Loc( UL_Info(Pt))),Owner( UL_Info(Pt)),AtkProb( UL_Info(Pt)));
+        fprintf(fs,"%c | %d | %d | %d | %c | %d | ",UnitType(UL_Info(Pt)),MaxHP(UL_Info(Pt)),HP( UL_Info(Pt)),Attack( UL_Info(Pt)),AttackType( UL_Info(Pt)),MaxSteps( UL_Info(Pt)));
+        fprintf(fs,"%d | %d | %d %d | %d | %.2f | %d\n",Steps( UL_Info(Pt)),AtkState( UL_Info(Pt)),Absis(Loc( UL_Info(Pt))),Ordinat(Loc( UL_Info(Pt))),Owner( UL_Info(Pt)),AtkProb( UL_Info(Pt)),UpkeepCost(UL_Info(Pt)));
         Pt = UL_Next(Pt);
       }
     }
     fprintf(fs,"</UNITS>\n");
+    // Writing the list of owned villages
     fprintf(fs,"<VILLAGES>\n");
     if (!VL_IsEmpty(Villages(P_Data[i]))) {
       vl_address PtVL = VL_First(Villages(P_Data[i]));
@@ -101,12 +108,12 @@ void SaveGame() {
       }
     }
     fprintf(fs,"</VILLAGES>\n");
-    fprintf(fs,"Income : %d\n",Income(P_Data[i]));
-    fprintf(fs,"Upkeep : %d\n",Upkeep(P_Data[i]));
-    fprintf(fs,"Base : %d %d\n",Absis(Base(P_Data[i])),Ordinat(Base(P_Data[i])));
+    fprintf(fs,"Income : %d\n",Income(P_Data[i])); // Writing player's income
+    fprintf(fs,"Upkeep : %d\n",Upkeep(P_Data[i])); // Writing player's upkeep
+    fprintf(fs,"Base : %d %d\n",Absis(Base(P_Data[i])),Ordinat(Base(P_Data[i]))); // Writing the location of player's base
     fprintf(fs,"</PLAYER%d>\n",i);
   }
-  fprintf(fs,"*");
+  fprintf(fs,"*"); // Mark the end of file
   fclose(fs);
   printf("Done writing to ");TulisKata(filename);printf("\n");
 }
@@ -479,6 +486,9 @@ void initialize_game(boolean NewGame,char *SaveFile) {
               ADVKATA();
               ADVKATA();
               AtkProb(temp) = atof(CKata.TabKata+1);
+              ADVKATA();
+              ADVKATA();
+              UpkeepCost(temp) = KataToInteger(CKata);
               ul_address ul_temp = UL_Alokasi(temp);
               UL_InsertLast(&Units(P_Data[1]),ul_temp);
               UpdateUnitOnMap(&Map_Data,Loc(UL_Info(ul_temp)),&UL_Info(ul_temp));
@@ -583,6 +593,9 @@ void initialize_game(boolean NewGame,char *SaveFile) {
               ADVKATA();
               ADVKATA();
               AtkProb(temp) = atof(CKata.TabKata+1);
+              ADVKATA();
+              ADVKATA();
+              UpkeepCost(temp) = KataToInteger(CKata);
               ul_address ul_temp = UL_Alokasi(temp);
               UL_InsertLast(&Units(P_Data[2]),ul_temp);
               UpdateUnitOnMap(&Map_Data,Loc(temp),&UL_Info(ul_temp));
@@ -649,32 +662,6 @@ void initialize_game(boolean NewGame,char *SaveFile) {
   UL_DelAll(&Units(P_Data[2]));
   VL_DelAll(&Villages(P_Data[2]));
   VL_DelAll(&FreeVillage);
-}
-
-void LoadUnitSpecs() {
-/* Loads the unit "templates" into TemplateUnit.
-   Hasn't checked for any invalid syntax. */
-  STARTKATA("unitstats.txt");
-  int i = 0;
-  while (!EndKata) {
-    TemplateType(TemplateUnit[i]) = CKata.TabKata[2];
-    ADVKATA();
-    TemplateAtkType(TemplateUnit[i]) = CKata.TabKata[1];
-    ADVKATA();
-    TemplateHP(TemplateUnit[i]) = KataToInteger(CKata);
-    ADVKATA();
-    TemplateAtk(TemplateUnit[i]) = KataToInteger(CKata);
-    TemplateDef(TemplateUnit[i]) = 0;
-    ADVKATA();
-    TemplateSteps(TemplateUnit[i]) = KataToInteger(CKata);
-    ADVKATA();
-    Price(TemplateUnit[i]) = KataToInteger(CKata);
-    ADVKATA();
-    UpkeepCost(TemplateUnit[i]) = KataToInteger(CKata);
-    ADVKATA();
-    ADVKATA();
-    i++;
-  }
 }
 
 int main() {

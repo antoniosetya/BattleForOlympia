@@ -18,6 +18,7 @@ typedef struct {
   POINT pos;
   int owner;
   float AttackProbability; // between 0 and 1
+  int UpkeepCost;
 } Unit;
 
 typedef struct {
@@ -44,6 +45,7 @@ typedef struct {
 #define Loc(P) (P).pos
 #define Owner(P) (P).owner
 #define AtkProb(P) (P).AttackProbability
+#define UpkeepCost(P) (P).UpkeepCost
 
 /* Use these selectors to access "UTemplate" data struct */
 #define TemplateType(P) (P).type
@@ -52,7 +54,7 @@ typedef struct {
 #define TemplateAtk(P) (P).Atk
 #define TemplateDef(P) (P).Def
 #define TemplateSteps(P) (P).maxSteps
-#define UpkeepCost(P) (P).UpkeepCost
+#define TemplateUpkeepCost(P) (P).UpkeepCost
 #define Price(P) (P).Price
 
 void InitUnit (Unit *U,UTemplate Template, int Owner, POINT Loc);

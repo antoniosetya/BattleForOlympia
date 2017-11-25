@@ -32,6 +32,7 @@ void InitUnit (Unit *U, UTemplate Template, int Owner, POINT Loc) {
     while ((Prob < 0.7) || (Prob > 0.9));
   }
   AtkProb(*U) = Prob;
+  UpkeepCost(*U) = TemplateUpkeepCost(Template);
 }
 
 void PrintUnitType(Unit U){
