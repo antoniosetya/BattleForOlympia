@@ -121,47 +121,48 @@ void SaveGame() {
 void ShowHelp() {
 /* Prints help page */
   printf("Commands : \n");
-  printf("MOVE : Moves current selected unit.\n");
-  printf("UNDO : Goes back to previous position after moving.\n");
-  printf("CHANGE_UNIT : Select another unit.\n");
-  printf("NEXT_UNIT : Select the next available unit. (that can move)");
-  printf("RECRUIT : Get more units.\n");
-  printf("ATTACK : Attack adjacent enemy units.\n");
-  printf("MAP : Shows the game map\n");
-  printf("INFO : Shows info of a map cell\n");
-  printf("END_TURN : Ends your turn. Pass it along to your enemy!\n");
-  printf("SAVE : Saves current game\n");
-  printf("EXIT : Returns to the main menu\n");
-  printf("HELP : Shows this help page!\n");
+  printf("MOVE        | mo : Moves current selected unit.\n");
+  printf("UNDO        | u  : Goes back to previous position after moving.\n");
+  printf("CHANGE_UNIT | cu : Select another unit.\n");
+  printf("NEXT_UNIT   | nu : Select the next available unit. (that can move)");
+  printf("RECRUIT     | r  : Get more units.\n");
+  printf("ATTACK      | a  : Attack adjacent enemy units.\n");
+  printf("MAP         | ma : Shows the game map\n");
+  printf("INFO        | i  : Shows info of a map cell\n");
+  printf("END_TURN    | et : Ends your turn. Pass it along to your enemy!\n");
+  printf("SAVE        | s  : Saves current game\n");
+  printf("EXIT        | ex : Returns to the main menu\n");
+  printf("HELP        | h  : Shows this help page!\n");
 }
 
 int ProcessGameCommand(Kata in) {
   int val = 1;
-  Kata tempKey[13];
-  CreateKata(&tempKey[1],"MOVE");
-  CreateKata(&tempKey[2],"UNDO");
-  CreateKata(&tempKey[3],"CHANGE_UNIT");
-  CreateKata(&tempKey[4],"RECRUIT");
-  CreateKata(&tempKey[5],"ATTACK");
-  CreateKata(&tempKey[6],"MAP");
-  CreateKata(&tempKey[7],"INFO");
-  CreateKata(&tempKey[8],"END_TURN");
-  CreateKata(&tempKey[9],"SAVE");
-  CreateKata(&tempKey[10],"EXIT");
-  CreateKata(&tempKey[11],"HELP");
-  CreateKata(&tempKey[12],"NEXT_UNIT");
+  Kata tempKey[25];
+  CreateKata(&tempKey[1],"MOVE");CreateKata(&tempKey[2],"mo");
+  CreateKata(&tempKey[3],"UNDO");CreateKata(&tempKey[4],"u");
+  CreateKata(&tempKey[5],"CHANGE_UNIT");CreateKata(&tempKey[6],"cu");
+  CreateKata(&tempKey[7],"RECRUIT");CreateKata(&tempKey[8],"r");
+  CreateKata(&tempKey[9],"ATTACK");CreateKata(&tempKey[10],"a");
+  CreateKata(&tempKey[11],"MAP");CreateKata(&tempKey[12],"ma");
+  CreateKata(&tempKey[13],"INFO");CreateKata(&tempKey[14],"i");
+  CreateKata(&tempKey[15],"END_TURN");CreateKata(&tempKey[16],"et");
+  CreateKata(&tempKey[17],"SAVE");CreateKata(&tempKey[18],"s");
+  CreateKata(&tempKey[19],"EXIT");CreateKata(&tempKey[20],"ex");
+  CreateKata(&tempKey[21],"HELP");CreateKata(&tempKey[22],"h");
+  CreateKata(&tempKey[23],"NEXT_UNIT");CreateKata(&tempKey[24],"nu");
   boolean found = false;
-  while ((val < 13) && !found) {
+  while ((val < 25) && !found) {
     found = IsKataSama(in,tempKey[val]);
     if (!found) val++;
   }
   if (!found) val = -999;
-  return val;
+  return (val+1)/2;
 }
 
 void StartGame() {
   printf("Game will now starting...\n");
   boolean Exit = false;
+  int PlayerWin = 0;
   char command[15];
   do {
     // clear();
@@ -215,10 +216,10 @@ void StartGame() {
   	      }
   		    else{
             if(CurrPlayer==1){
-              attack(&Units(P_Data[CurrPlayer]),&Units(P_Data[2]));
+              PlayerWin = attack(&Map_Data,&Units(P_Data[CurrPlayer]),&Units(P_Data[2]));
             }
             else{
-              attack(&Units(P_Data[CurrPlayer]),&Units(P_Data[1]));
+              PlayerWin = attack(&Map_Data,&Units(P_Data[CurrPlayer]),&Units(P_Data[1]));
             }
   		    }
           break;
@@ -250,9 +251,15 @@ void StartGame() {
       }
       printf("\n");
     }
-    while (!EndTurn && !Exit);
+    while (!EndTurn && !Exit && !PlayerWin);
   }
-  while (!Exit);
+  while (!Exit && !PlayerWin);
+  if (PlayerWin == 1) {
+    printf("Player 1 wins! Now give player 2 a fist bump and peace!\n");
+  }
+  else if (PlayerWin == 2) {
+    printf("Player 2 wins! Now give player 1 a fist bump and peace!\n");
+  }
 }
 
 void initialize_game(boolean NewGame,char *SaveFile) {

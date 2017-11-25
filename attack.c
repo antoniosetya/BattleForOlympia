@@ -1,5 +1,6 @@
 #include "libs/UnitList.h"
 #include <stdio.h>
+#include "libs/map.h"
 #include <stdlib.h>
 #include <time.h>
 float randomFloat(){
@@ -7,14 +8,17 @@ float randomFloat(){
      return r;
 }
 
-void attack(UnitList *P1,UnitList *P2){
-	//I.S. : AtkState(*P1) = True;
-	//F.S : Unit *P1 menyerang Unit *P2,Unit *P2 membalas jika tipe serangan sama.
-	//Unit P1 tidak dapat menyerang lagi dan kehabisan movement point
-	//Harusnya udah beres
+int attack(MAP *Map_Data, UnitList *P1,UnitList *P2){
+	/* I.S. : AtkState(*P1) = True;
+	   F.S : Unit *P1 menyerang Unit *P2,Unit *P2 membalas jika tipe serangan sama.
+	   Unit P1 tidak dapat menyerang lagi dan kehabisan movement point.
+     Dalam kondisi normal, fungsi akan mengembalikan nilai 0;
+     Jika pemanggilan fungsi menyebabkan salah satu King dari pemain mati, fungsi
+     akan mengembalikan nomor pemain. */
 
 	/*Kamus Lokal*/
-	int i,pilihan;
+	int i, pilihan, winFlag;
+  winFlag = 0;
 	float rndm;
 	srand(time(NULL)); 					//Untuk keperluan Seed Random
 	ul_address P_1 = UL_Curr(*P1);
@@ -109,7 +113,7 @@ void attack(UnitList *P1,UnitList *P2){
 				}
 			}
 			else{
-				printf("retalation P2 failed :\"\( \n");
+				printf("retaliation P2 failed :\"\( \n");
 			}
 		}
 
@@ -119,8 +123,10 @@ void attack(UnitList *P1,UnitList *P2){
 			PrintUnitType(UL_Info(P_1));
 			printf("is Dead\n");
 			if(UnitType(UL_Info(P_1))=='K'){
+        winFlag = Owner(UL_Info(P_1));
 				UL_DelAll(P1);
 			}else{
+        UpdateUnitOnMap(Map_Data,Loc(UL_Info(P_1)),Nil);
 				UL_DelP(P1,UL_Info(P_1));
 			}
 		 } else
@@ -130,8 +136,10 @@ void attack(UnitList *P1,UnitList *P2){
 			printf("is Dead\n");
 			UL_DelP (P2,UL_Info(P_2));
 			if(UnitType(UL_Info(P_2))=='K'){
+        winFlag = Owner(UL_Info(P_2));
 				UL_DelAll(P2);
 			}else{
+        UpdateUnitOnMap(Map_Data,Loc(UL_Info(P_2)),Nil);
 				UL_DelP (P2,UL_Info(P_2));
 			}
 		 }
@@ -140,4 +148,5 @@ void attack(UnitList *P1,UnitList *P2){
 		Steps(UL_Info(P_1)) = 0;
 		AtkState(UL_Info(P_1)) = false;
 	} //tutup kurung dari line 55
+  return winFlag;
 }
