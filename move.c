@@ -120,6 +120,7 @@ void MoveCurrUnit(int P, int * MovPoint, MAP *MovMAP, Stack *MovStack){
           BuildOwner(VL_Info(targetVil)) = P;
           VL_InsertFirst(&Villages(P_Data[P]),targetVil);
           UpdateBuildingOnMap(MovMAP,temp,'V',P);
+          Income(P_Data[P])+=75;
           printf("Acquired an empty village!\n");
         }
         else {
@@ -127,16 +128,20 @@ void MoveCurrUnit(int P, int * MovPoint, MAP *MovMAP, Stack *MovStack){
             if (P == 1) {
               BuildOwner(tempVil) = 2;
               VL_DeleteP(&Villages(P_Data[2]),tempVil,&targetVil);
+              Income(P_Data[2])-=75;
               BuildOwner(VL_Info(targetVil)) = P;
               VL_InsertFirst(&Villages(P_Data[P]),targetVil);
               UpdateBuildingOnMap(MovMAP,temp,'V',P);
+              Income(P_Data[P])+=75;
             }
             else {
               BuildOwner(tempVil) = 1;
               VL_DeleteP(&Villages(P_Data[1]),tempVil,&targetVil);
+              Income(P_Data[2])-=75;
               BuildOwner(VL_Info(targetVil)) = P;
               VL_InsertFirst(&Villages(P_Data[P]),targetVil);
               UpdateBuildingOnMap(MovMAP,temp,'V',P);
+              Income(P_Data[P])+=75;
             }
             printf("Acquired a village!\n");
           }
