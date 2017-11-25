@@ -12,6 +12,7 @@
 #include "attack.c"
 #include "info.c"
 #include "change_unit.c"
+#include "next_unit.c"
 #include "recruit.c"
 #include <stdio.h>
 
@@ -116,6 +117,7 @@ void ShowHelp() {
   printf("MOVE : Moves current selected unit.\n");
   printf("UNDO : Goes back to previous position after moving.\n");
   printf("CHANGE_UNIT : Select another unit.\n");
+  printf("NEXT_UNIT : Select the next available unit. (that can move)");
   printf("RECRUIT : Get more units.\n");
   printf("ATTACK : Attack adjacent enemy units.\n");
   printf("MAP : Shows the game map\n");
@@ -128,7 +130,7 @@ void ShowHelp() {
 
 int ProcessGameCommand(Kata in) {
   int val = 1;
-  Kata tempKey[12];
+  Kata tempKey[13];
   CreateKata(&tempKey[1],"MOVE");
   CreateKata(&tempKey[2],"UNDO");
   CreateKata(&tempKey[3],"CHANGE_UNIT");
@@ -140,8 +142,9 @@ int ProcessGameCommand(Kata in) {
   CreateKata(&tempKey[9],"SAVE");
   CreateKata(&tempKey[10],"EXIT");
   CreateKata(&tempKey[11],"HELP");
+  CreateKata(&tempKey[12],"NEXT_UNIT");
   boolean found = false;
-  while ((val < 12) && !found) {
+  while ((val < 13) && !found) {
     found = IsKataSama(in,tempKey[val]);
     if (!found) val++;
   }
@@ -230,6 +233,10 @@ void StartGame() {
           break;
         case 11: // Help
           ShowHelp();
+          break;
+        case 12:
+          // printf("Next_Unit\n");
+          NextUnit(&Units(P_Data[CurrPlayer]));
           break;
         default:
           printf("Wrong command!\n");
@@ -635,6 +642,13 @@ void initialize_game(boolean NewGame,char *SaveFile) {
   }
   /* Starts the game */
   StartGame();
+  /* Free dynamically allocated resource after game is over */
+  DealokMap(&Map_Data);
+  UL_DelAll(&Units(P_Data[1]));
+  VL_DelAll(&Villages(P_Data[1]));
+  UL_DelAll(&Units(P_Data[2]));
+  VL_DelAll(&Villages(P_Data[2]));
+  VL_DelAll(&FreeVillage);
 }
 
 void LoadUnitSpecs() {
