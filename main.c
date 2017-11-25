@@ -287,6 +287,8 @@ void initialize_game(boolean NewGame,char *SaveFile) {
   CreateEmptyQueue(&P_Turns);
   // Initialize free village list
   VL_CreateEmpty(&FreeVillage);
+  // Seeding RNG (look at attack.c)
+  initRandom();
   if (NewGame) {
     // Adds the player to the queue
     Add(&P_Turns,1);

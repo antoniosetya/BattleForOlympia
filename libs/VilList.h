@@ -95,6 +95,8 @@ void VL_DelP (VilList *L, infotype X);
 /* Maka P dihapus dari list dan di-dealokasi */
 /* Jika tidak ada elemen list dengan info(P)=X, maka list tetap */
 /* List mungkin menjadi kosong karena penghapusan */
+void VL_DeleteP (VilList *L, infotype X, vl_address *P);
+/* Sama seperti VL_DelP, namun elemen list tidak di-dealokasi */
 void VL_DelLast (VilList *L, vl_address *P);
 /* I.S. List tidak kosong */
 /* F.S. P adalah alamat elemen terakhir list sebelum penghapusan  */

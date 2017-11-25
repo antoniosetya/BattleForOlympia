@@ -3,6 +3,11 @@
 #include "libs/map.h"
 #include <stdlib.h>
 #include <time.h>
+
+void initRandom() {
+  srand(time(NULL));
+}
+
 float randomFloat(){
      float r = (float)rand()/(float)RAND_MAX;
      return r;
@@ -20,7 +25,7 @@ int attack(MAP *Map_Data, UnitList *P1,UnitList *P2){
 	int i, pilihan, winFlag;
   winFlag = 0;
 	float rndm;
-	srand(time(NULL)); 					//Untuk keperluan Seed Random
+	initRandom(); 					//Untuk keperluan Seed Random
 	ul_address P_1 = UL_Curr(*P1);
 	ul_address P_2 = UL_First(*P2);
 	UnitList P_fight;					//P_fight menyimpan daftar unit yang bisa diserang

@@ -180,6 +180,31 @@ void VL_DelP (VilList *L, infotype X) {
   }
 }
 
+void VL_DeleteP (VilList *L, infotype X, vl_address *P) {
+/* Sama seperti VL_DelP, namun elemen list tidak di-dealokasi
+   Jika tidak ada elemen list yang = X, *P = Nil */
+  vl_address Pt = VL_First(*L);
+  vl_address PrevPt = Nil;
+  boolean found = false;
+  while ((Pt != Nil) && !found) {
+    found = EQ(VL_Info(Pt).pos,X.pos);
+    if (!found) {
+      PrevPt = Pt;
+      Pt = VL_Next(Pt);
+    }
+  }
+  if (found) {
+    if (PrevPt == Nil) {
+      VL_DelFirst(L,&Pt);
+    }
+    else {
+      VL_Next(PrevPt) = VL_Next(Pt);
+    }
+    *P = Pt;
+    VL_Next(*P) = Nil;
+  }
+}
+
 void VL_DelLast (VilList *L, vl_address *P) {
 /* I.S. List tidak kosong */
 /* F.S. P adalah alamat elemen terakhir list sebelum penghapusan  */

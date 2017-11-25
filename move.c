@@ -7,6 +7,8 @@
 
 Player P_Data[3]; //Redefining global extern variable from player.h
 UTemplate TemplateUnit[4]; // Contains template units
+extern VilList FreeVillage;
+VilList FreeVillage;
 
 void DrawPossMov (MAP M, int CurrPlayer, int MovPoint, int currX, int currY) {
 /* I.S. M terdefinisi */
@@ -106,64 +108,41 @@ void MoveCurrUnit(int P, int * MovPoint, MAP *MovMAP, Stack *MovStack){
 			Push(MovStack,currLoc);
 			Steps(UL_Info(Ptemp)) -= ceil(distance);
       printf("Successfully moved to ");TulisPOINT(temp);printf("\n");
+      // Village acquisition
+      if (BuildType(Elmt(*MovMAP,Absis(temp),Ordinat(temp)).BData) == 'V') {
+        B_Data tempVil;
+        vl_address targetVil;
+        BuildType(tempVil) = 'V';
+        BuildPos(tempVil) = temp;
+        if (BuildOwner(Elmt(*MovMAP,Absis(temp),Ordinat(temp)).BData) == 0) {
+          BuildOwner(tempVil) = 0;
+          VL_DeleteP(&FreeVillage,tempVil,&targetVil);
+          BuildOwner(VL_Info(targetVil)) = P;
+          VL_InsertFirst(&Villages(P_Data[P]),targetVil);
+          UpdateBuildingOnMap(MovMAP,temp,'V',P);
+          printf("Acquired an empty village!\n");
+        }
+        else {
+          if (BuildOwner(Elmt(*MovMAP,Absis(temp),Ordinat(temp)).BData) != P) {
+            if (P == 1) {
+              BuildOwner(tempVil) = 2;
+              VL_DeleteP(&Villages(P_Data[2]),tempVil,&targetVil);
+              BuildOwner(VL_Info(targetVil)) = P;
+              VL_InsertFirst(&Villages(P_Data[P]),targetVil);
+              UpdateBuildingOnMap(MovMAP,temp,'V',P);
+            }
+            else {
+              BuildOwner(tempVil) = 1;
+              VL_DeleteP(&Villages(P_Data[1]),tempVil,&targetVil);
+              BuildOwner(VL_Info(targetVil)) = P;
+              VL_InsertFirst(&Villages(P_Data[P]),targetVil);
+              UpdateBuildingOnMap(MovMAP,temp,'V',P);
+            }
+            printf("Acquired a village!\n");
+          }
+        }
+      }
 		}
     else
       printf("You can’t move there\n");
-		/* else if (*MovPoint == 2){
-			if ((abs(Absis(temp)-currX) == 1 && abs(Ordinat(temp)-currY) == 0) || (abs(Ordinat(temp)-currY) == 1 && abs(Absis(temp)-currX) == 0) || (abs(Absis(temp)-currX) == 2 && abs(Ordinat(temp)-currY) == 0) || (abs(Ordinat(temp)-currY) == 2 && abs(Absis(temp)-currX) == 0) || ((abs(Absis(temp)-currX) == 1 && abs(Ordinat(temp)-currY) == 1) || (abs(Ordinat(temp)-currY) == 1 && abs(Absis(temp)-currX) == 1)))
-				if ((abs(Absis(temp)-currX) == 1 && abs(Ordinat(temp)-currY) == 0) || (abs(Ordinat(temp)-currY) == 1 && abs(Absis(temp)-currX) == 0)){
-					UpdateUnitOnMap(&MovMAP,temp,&UL_Info(UL_Curr(Units(P_Data[P]))));
-					Elmt(MovMAP,Absis(currLoc),Ordinat(currLoc)).CurUnit = Nil;
-					Loc(UL_Info(UL_Curr(Units(P_Data[P])))) = PlusDelta(Loc(UL_Info(UL_Curr(Units(P_Data[P])))),Absis(temp)-Absis(currLoc),Ordinat(temp)-Ordinat(currLoc));
-					Push(&MovStack,currLoc);
-					Push(&MovStack,temp);
-					* MovPoint -= 1;
-					moved = true;
-				} else{
-					if (abs(Absis(temp)-currX) == 1 && abs(Ordinat(temp)-currY) == 1){
-						tempAbsis = CoorX - currX;
-						temp = MakePOINT(currX+tempAbsis,currY);
-						Push(&MovStack,currLoc);
-						Push(&MovStack,temp);
-						Push(&MovStack,temp);
-						tempOrdinat = CoorY - currY;
-						temp = MakePOINT(Absis(temp),currY+tempOrdinat);
-						UpdateUnitOnMap(&MovMAP,temp,&UL_Info(UL_Curr(Units(P_Data[P]))));
-						Elmt(MovMAP,Absis(currLoc),Ordinat(currLoc)).CurUnit = Nil;
-						Loc(UL_Info(UL_Curr(Units(P_Data[P])))) = PlusDelta(Loc(UL_Info(UL_Curr(Units(P_Data[P])))),Absis(temp)-Absis(currLoc),Ordinat(temp)-Ordinat(currLoc));
-						Push(&MovStack,temp);
-						* MovPoint -= 2;
-						moved = true;
-					} else if (abs(Absis(temp)-currX) == 2 && abs(Ordinat(temp)-currY) == 0){
-						tempAbsis = (CoorX - currX)/2;
-						temp = MakePOINT(currX+tempAbsis,currY);
-						Push(&MovStack,currLoc);
-						Push(&MovStack,temp);
-						Push(&MovStack,temp);
-						temp = MakePOINT(Absis(temp)+tempAbsis,currY);
-						UpdateUnitOnMap(&MovMAP,temp,&UL_Info(UL_Curr(Units(P_Data[P]))));
-						Elmt(MovMAP,Absis(currLoc),Ordinat(currLoc)).CurUnit = Nil;
-						Loc(UL_Info(UL_Curr(Units(P_Data[P])))) = PlusDelta(Loc(UL_Info(UL_Curr(Units(P_Data[P])))),Absis(temp)-Absis(currLoc),Ordinat(temp)-Ordinat(currLoc));
-						Push(&MovStack,temp);
-						* MovPoint -= 2;
-						moved = true;
-					} else if (abs(Absis(temp)-currX) == 2 && abs(Ordinat(temp)-currY) == 0){
-						tempOrdinat = (CoorY - currY)/2;
-						temp = MakePOINT(currX,currY+tempOrdinat);
-						Push(&MovStack,currLoc);
-						Push(&MovStack,temp);
-						Push(&MovStack,temp);
-						temp = MakePOINT(currX,Ordinat(temp)+tempOrdinat);
-						UpdateUnitOnMap(&MovMAP,temp,&UL_Info(UL_Curr(Units(P_Data[P]))));
-						Elmt(MovMAP,Absis(currLoc),Ordinat(currLoc)).CurUnit = Nil;
-						Loc(UL_Info(UL_Curr(Units(P_Data[P])))) = PlusDelta(Loc(UL_Info(UL_Curr(Units(P_Data[P])))),Absis(temp)-Absis(currLoc),Ordinat(temp)-Ordinat(currLoc));
-						Push(&MovStack,temp);
-						* MovPoint -= 2;
-						moved = true;
-					}
-				}
-			else
-				printf("You can’t move there\n");
-		}
-	} while (!moved); */
 }
