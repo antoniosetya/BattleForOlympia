@@ -50,8 +50,8 @@ void DrawPossMov (MAP M, int CurrPlayer, int MovPoint, int currX, int currY) {
     POINT temp;
     // Prints any unit that occupy this cell
     for (j = 1;j <= NKol(M); j++) {
-      temp = MakePOINT(j,i);
       if (Elmt(M,j,i).CurUnit != Nil) {
+        temp = MakePOINT(j,i);
         if (EQ(temp,Loc(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))))) {
           printf("* %s%c%s *",GREEN,UnitType(*Elmt(M,j,i).CurUnit),NORMAL);
         }
@@ -60,24 +60,16 @@ void DrawPossMov (MAP M, int CurrPlayer, int MovPoint, int currX, int currY) {
         }
       }
       else {
-		if (MovPoint == 1){
-			if ((abs(Absis(temp)-currX) == 1 && abs(Ordinat(temp)-currY) == 0) || (abs(Ordinat(temp)-currY) == 1 && abs(Absis(temp)-currX) == 0))
-				printf("* # *");
-			else
-			printf("*   *");
-		}
-		else if (MovPoint == 2){
-			if ((abs(Absis(temp)-currX) == 1 && abs(Ordinat(temp)-currY) == 0) || (abs(Ordinat(temp)-currY) == 1 && abs(Absis(temp)-currX) == 0) || (abs(Absis(temp)-currX) == 2 && abs(Ordinat(temp)-currY) == 0) || (abs(Ordinat(temp)-currY) == 2 && abs(Absis(temp)-currX) == 0) || ((abs(Absis(temp)-currX) == 1 && abs(Ordinat(temp)-currY) == 1) || (abs(Ordinat(temp)-currY) == 1 && abs(Absis(temp)-currX) == 1)))
-				printf("* # *");
-			else
-				printf("*   *");
-			
-		}
+        printf("*   *");
       }
     }
     printf("\n    ");
     for (j = 1;j <= NKol(M); j++) {
-      printf("*   *");
+      temp = MakePOINT(j,i);
+			if (sqrt(pow((Absis(temp)-currX),2) + pow((Ordinat(temp)-currY),2)) <= MovPoint)
+				printf("* # *");
+			else
+			  printf("*   *");
     }
     printf("\n    ");
     for (j = 1;j <= NKol(M); j++) {
@@ -87,40 +79,38 @@ void DrawPossMov (MAP M, int CurrPlayer, int MovPoint, int currX, int currY) {
   }
 }
 
-Stack MoveCurrUnit(int P, int * MovPoint, MAP MovMAP, Stack MovStack){
+void MoveCurrUnit(int P, int * MovPoint, MAP *MovMAP, Stack *MovStack){
 	ul_address Ptemp = UL_Curr(Units(P_Data[P]));
 	boolean moved;
 	POINT temp, currLoc;
 	int CoorX, CoorY, tempAbsis, tempOrdinat;
 	int index;
-	
+
 	// (Loc(UL_Info(UL_Curr((Units(P_Data[P])))))))
-	moved = false;
 	int currX = Absis(Loc(UL_Info(UL_Curr(Units(P_Data[P])))));
 	int currY = Ordinat(Loc(UL_Info(UL_Curr(Units(P_Data[P])))));
-	
-	DrawPossMov(MovMAP,P,*MovPoint,currX,currY);
+
+	DrawPossMov(*MovMAP,P,*MovPoint,currX,currY);
 	printf("  # : Moveable location\n");
-	do{
+	//do {
 		printf("\nPlease enter cell’s coordinate x y (seperated by a space): ");
 		scanf("%d%d", &CoorX, &CoorY);
 		printf("\n");
 		temp = MakePOINT(CoorX,CoorY);
 		currLoc = MakePOINT(currX,currY);
-		if (*MovPoint == 1){
-			if ((abs(Absis(temp)-currX) == 1 && abs(Ordinat(temp)-currY) == 0) || (abs(Ordinat(temp)-currY) == 1 && abs(Absis(temp)-currX) == 0)){
-				UpdateUnitOnMap(&MovMAP,temp,&UL_Info(UL_Curr(Units(P_Data[P]))));
-				Elmt(MovMAP,Absis(currLoc),Ordinat(currLoc)).CurUnit = Nil;
-				Loc(UL_Info(UL_Curr(Units(P_Data[P])))) = PlusDelta(Loc(UL_Info(UL_Curr(Units(P_Data[P])))),Absis(temp)-Absis(currLoc),Ordinat(temp)-Ordinat(currLoc));
-				Push(&MovStack,currLoc);
-				Push(&MovStack,temp);
-				* MovPoint -= 1;
-				moved = true;
-			}
-			else
-				printf("You can’t move there\n");
+    float distance = sqrt(pow((Absis(temp)-currX),2) + pow((Ordinat(temp)-currY),2));
+		if (distance <= Steps(UL_Info(Ptemp))) {
+			UpdateUnitOnMap(MovMAP,temp,&UL_Info(UL_Curr(Units(P_Data[P]))));
+			UpdateUnitOnMap(MovMAP,currLoc,Nil);
+			Loc(UL_Info(UL_Curr(Units(P_Data[P])))) = temp;
+			Push(MovStack,currLoc);
+			Push(MovStack,temp);
+			Steps(UL_Info(Ptemp))-=distance;
+      printf("Successfully moved to ");TulisPOINT(temp);printf("\n");
 		}
-		else if (*MovPoint == 2){
+    else
+      printf("You can’t move there\n");
+		/* else if (*MovPoint == 2){
 			if ((abs(Absis(temp)-currX) == 1 && abs(Ordinat(temp)-currY) == 0) || (abs(Ordinat(temp)-currY) == 1 && abs(Absis(temp)-currX) == 0) || (abs(Absis(temp)-currX) == 2 && abs(Ordinat(temp)-currY) == 0) || (abs(Ordinat(temp)-currY) == 2 && abs(Absis(temp)-currX) == 0) || ((abs(Absis(temp)-currX) == 1 && abs(Ordinat(temp)-currY) == 1) || (abs(Ordinat(temp)-currY) == 1 && abs(Absis(temp)-currX) == 1)))
 				if ((abs(Absis(temp)-currX) == 1 && abs(Ordinat(temp)-currY) == 0) || (abs(Ordinat(temp)-currY) == 1 && abs(Absis(temp)-currX) == 0)){
 					UpdateUnitOnMap(&MovMAP,temp,&UL_Info(UL_Curr(Units(P_Data[P]))));
@@ -176,7 +166,5 @@ Stack MoveCurrUnit(int P, int * MovPoint, MAP MovMAP, Stack MovStack){
 			else
 				printf("You can’t move there\n");
 		}
-	} while (!moved);
-	
-	return MovStack;
+	} while (!moved); */
 }

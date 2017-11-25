@@ -172,11 +172,7 @@ void StartGame() {
     Add(&P_Turns,CurrPlayer); /* Push back to the queue */
     printf("%sIt's player %d's turn!%s\n",Color(P_Data[CurrPlayer]),CurrPlayer,NORMAL);
     boolean EndTurn = false;
-	int MovPoint = 2;
-	Stack MovementStack;
-	CreateEmptyStack(&MovementStack);
-	
-			POINT X;
+	  POINT X;
     do {
       int i = 0;
       // Prints essential player's data
@@ -194,8 +190,8 @@ void StartGame() {
       printf("Selected Unit : ");PrintUnitType(UL_Info(UL_Curr(Units(P_Data[CurrPlayer]))));
       TulisPOINT(Loc(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))));
       printf(" | ");
-	  if (Steps(UL_Info(UL_Curr(Units(P_Data[CurrPlayer]))))) printf("Movement Point: %d", MovPoint);
-	  printf(" | ");
+  	  if (Steps(UL_Info(UL_Curr(Units(P_Data[CurrPlayer]))))) printf("Movement Point: %d", Steps(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))));
+  	  printf(" | ");
       if (AtkState(UL_Info(UL_Curr(Units(P_Data[CurrPlayer]))))) printf("%sCAN ATTACK%s",GREEN,NORMAL);
       else printf("%sCANNOT ATTACK%s",RED,NORMAL);
       printf(" | ");
@@ -207,25 +203,17 @@ void StartGame() {
       Kata input;
       BacaKata(&input);
       switch (ProcessGameCommand(input)) {
-<<<<<<< HEAD
-        case 1: // Move
-          printf("Move\n");
-          break;
-        case 2: // Undo
-          printf("Undo\n");
-=======
         case 1:
-		  if (MovPoint > 0){
-			MovementStack = MoveCurrUnit(CurrPlayer,&MovPoint,Map_Data,MovementStack);
-			printf("You've successfully moved to "); TulisPOINT(InfoTop(MovementStack)); printf("\n\n");
-		  } else printf("You have no any Movement Point!\n\n");
+    		  if (Steps(UL_Info(UL_Curr(Units(P_Data[CurrPlayer]))))){
+      			MoveCurrUnit(CurrPlayer,&Steps(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))),&Map_Data,&Mov_Data);
+          }
+          else printf("You don't have any Movement Point!\n\n");
           break;
         case 2:
-		  if (!IsStackEmpty(MovementStack)){
-			MovementStack = UndoMov(CurrPlayer,&MovPoint,Map_Data,MovementStack);
-			DrawMAP(Map_Data,CurrPlayer);
-		  } else printf("You can't perform UNDO!\n\n");
->>>>>>> 729730ce1897942446b3112661c49fdec519c540
+    		  if (!IsStackEmpty(Mov_Data)){
+    			Mov_Data = UndoMov(CurrPlayer,&Steps(UL_Info(UL_Curr(Units(P_Data[CurrPlayer])))),Map_Data,Mov_Data);
+    			DrawMAP(Map_Data,CurrPlayer);
+    		  } else printf("You can't perform UNDO!\n\n");
           break;
         case 3: // Change Unit
           ChangeUnit(CurrPlayer,&UL_Curr(Units(P_Data[CurrPlayer])));
