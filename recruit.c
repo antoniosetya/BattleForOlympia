@@ -13,7 +13,7 @@ void Recruit(int P, MAP Map_Data) {
 	}
 	else {
 		if (Gold(P_Data[P]) <= 0)
-			printf("You don't have any gold\n");
+			printf("You don't have any gold\n\n");
 		else {
 			POINT castle_p;
 			printf("Enter coordinate of empty castle: ");
@@ -41,37 +41,37 @@ void Recruit(int P, MAP Map_Data) {
 			}
 
 			if (unit_type == 1) {
-				if (Gold(P_Data[P]) < 50)
+				if (Gold(P_Data[P]) < TemplateUnit[1].Price)
 					printf("Not enough money\n");
 				else {
 					Unit recruit_unit;
 					InitUnit(&recruit_unit, TemplateUnit[1], P, castle_p);
 					UL_InsVLast(&Units(P_Data[P]), recruit_unit);
-					Gold(P_Data[P]) -= 50;
+					Gold(P_Data[P]) -= TemplateUnit[1].Price;
 					Elmt(Map_Data, Absis(castle_p), Ordinat(castle_p)).CurUnit = 'A';
 					printf("You have recruited an archer!\n\n");
 				}
 			}
 			else if (unit_type == 2) {
-				if (Gold(P_Data[P]) < 40)
+				if (Gold(P_Data[P]) < TemplateUnit[2].Price)
 					printf("Not enough money\n");
 				else {
 					Unit recruit_unit;
 					InitUnit(&recruit_unit, TemplateUnit[2], P, castle_p);
 					UL_InsVLast(&Units(P_Data[P]), recruit_unit);
-					Gold(P_Data[P]) -= 40;
+					Gold(P_Data[P]) -= TemplateUnit[2].Price;
 					Elmt(Map_Data, Absis(castle_p), Ordinat(castle_p)).CurUnit = 'S';
 					printf("You have recruited a swordsman!\n\n");
 				}
 			}
 			else if (unit_type == 3) {
-				if (Gold(P_Data[P]) < 60)
+				if (Gold(P_Data[P]) < TemplateUnit[3].Price)
 					printf("Not enough money\n");
 				else {
 					Unit recruit_unit;
 					InitUnit(&recruit_unit, TemplateUnit[3], P, castle_p);
 					UL_InsVLast(&Units(P_Data[P]), recruit_unit);
-					Gold(P_Data[P]) -= 60;
+					Gold(P_Data[P]) -= TemplateUnit[3].Price;
 					Elmt(Map_Data, Absis(castle_p), Ordinat(castle_p)).CurUnit = 'W';
 					printf("You have recruited a white mage!\n\n");
 				}
