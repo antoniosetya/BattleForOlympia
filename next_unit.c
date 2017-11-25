@@ -2,7 +2,7 @@
 #include "libs/player.h"
 
 Player P_Data[3]; 
-void ChangeUnit(UnitList *P){
+void NextUnit(UnitList *P){
 	//I.S = UnitList tidak kosong
 	//F.S = Select unit baru yang masih punya movement point atau AtkState==true
 	ul_address Current = UL_Curr(*P);
