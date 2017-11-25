@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "libs/player.h"
 
-Player P_Data[3]; 
+Player P_Data[3];
 void NextUnit(UnitList *P){
 	//I.S = UnitList tidak kosong
 	//F.S = Select unit baru yang masih punya movement point atau AtkState==true
@@ -25,6 +25,7 @@ void NextUnit(UnitList *P){
 			}else{
 				printf("You're now selecting ");
 				PrintUnitType(UL_Info(UL_Curr(*P)));
+				printf("on ");TulisPOINT(Loc(UL_Info(UL_Curr(*P))));
 				printf("\n");
 	}
 }
