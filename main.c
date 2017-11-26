@@ -28,6 +28,7 @@ Kata CKata;
 // Redeclaring global extern variable from player.h
 Player P_Data[3];
 
+boolean Exit;
 Queue P_Turns; // Stores turns of the player
 Stack Mov_Data; // Stores movement data of a unit
 MAP Map_Data; // Stores map data
@@ -176,7 +177,7 @@ int ProcessGameCommand(Kata in) {
 
 void StartGame() {
   printf("Game will now starting...\n");
-  boolean Exit = false;
+  Exit = false;
   int PlayerWin = 0;
   char command[15];
   do {
@@ -706,7 +707,6 @@ int main() {
       execode = main_menu();
       if (execode == 1) {
         initialize_game(true,Nil);
-
       }
       else if (execode == 2) {
         Kata filename;
@@ -715,7 +715,7 @@ int main() {
         initialize_game(false,filename.TabKata+1);
       }
     }
-    while (execode != 3);
+    while ((execode != 3) && !Exit);
     // clear();
     /* execode == 3 */
     printf("Program exiting. Until next time, then...!\n");
