@@ -42,7 +42,12 @@ int main_menu() {
     2 : Loads a previously saved game
     3 : Exit the program */
     // clear();
-    int com;
+    int i;
+    Kata com;
+    Kata keyword[4];
+    CreateKata(&keyword[1],"start");
+    CreateKata(&keyword[2],"load");
+    CreateKata(&keyword[3],"exit");
     printf("\n======================================================================================\n");
     printf("  ____        _   _   _         __              ____  _                       _       \n");
     printf(" |  _ \\      | | | | | |       / _|            / __ \\| |                     (_)      \n");
@@ -53,19 +58,25 @@ int main_menu() {
     printf("                                                         __/ |         | |            \n");
     printf("                                                        |___/          |_|            \n");
     printf("======================================================================================\n\n");
-    printf("1. New Game\n");
-    printf("2. Load Game\n");
-    printf("3. Exit\n");
+    printf("Type 'start' to start the game.\n");
+    printf("Type 'load' to load previously saved game\n");
+    printf("Type 'exit' to exit this game\n");
     printf("--------------------------------------------------------------------------------------\n");
     boolean valid = false;
     do {
-        printf("Your command? (insert the menu number) : ");
-        scanf("%d",&com);
-        valid = ((com >= 1) && (com <= 3));
+        printf("Your command? : ");
+        BacaKata(&com);
+        i = 1;
+        while ((i <= 3) && !valid) {
+          valid = IsKataSama(com,keyword[i]);
+          if (!valid) {
+            i++;
+          }
+        }
         if (!valid) printf("Input is not valid!\n");
     }
     while (!valid);
-    return com;
+    return i;
 }
 
 void SaveGame() {
