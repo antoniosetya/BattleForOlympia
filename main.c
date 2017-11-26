@@ -16,6 +16,7 @@
 #include "recruit.c"
 #include "move.c"
 #include "undo.c"
+#include "endturn.c"
 #include <stdio.h>
 
 #define clear() printf("\033[H\033[J") // Unix-style code to clear screen
@@ -26,6 +27,7 @@ boolean EndKata;
 Kata CKata;
 // Redeclaring global extern variable from player.h
 Player P_Data[3];
+
 Queue P_Turns; // Stores turns of the player
 Stack Mov_Data; // Stores movement data of a unit
 MAP Map_Data; // Stores map data
@@ -228,7 +230,7 @@ void StartGame() {
   		       printf("This unit cannot attack!\n");
   	      }
   		    else{
-            if(CurrPlayer==1){
+            if(CurrPlayer == 1){
               PlayerWin = attack(&Map_Data,&Units(P_Data[CurrPlayer]),&Units(P_Data[2]));
             }
             else{
@@ -244,8 +246,8 @@ void StartGame() {
           InfoCmd(Map_Data);
           break;
         case 8: // End_Turn
-          printf("End_Turn\n");
-          //EndTurn = true;
+          End_Turn(CurrPlayer,&Map_Data);
+          EndTurn = true;
           break;
         case 9: // Save
           SaveGame();
@@ -526,9 +528,9 @@ void initialize_game(boolean NewGame,char *SaveFile) {
             ADVKATA();
             printf("Reading player 1 villages...\n");
             while (!IsKataSama(CKata,keyword[12])) {
-              row = KataToInteger(CKata);
-              ADVKATA();
               col = KataToInteger(CKata);
+              ADVKATA();
+              row = KataToInteger(CKata);
               BuildPos(temp) = MakePOINT(col,row);
               VL_InsVLast(&Villages(P_Data[1]),temp);
               UpdateBuildingOnMap(&Map_Data,BuildPos(temp),BuildType(temp),BuildOwner(temp));
@@ -632,9 +634,9 @@ void initialize_game(boolean NewGame,char *SaveFile) {
             VL_CreateEmpty(&Villages(P_Data[2]));
             ADVKATA();
             while (!IsKataSama(CKata,keyword[12])) {
-              row = KataToInteger(CKata);
-              ADVKATA();
               col = KataToInteger(CKata);
+              ADVKATA();
+              row = KataToInteger(CKata);
               BuildPos(temp) = MakePOINT(col,row);
               VL_InsVLast(&Villages(P_Data[2]),temp);
               UpdateBuildingOnMap(&Map_Data,BuildPos(temp),BuildType(temp),BuildOwner(temp));

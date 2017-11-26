@@ -25,15 +25,20 @@ void ChangeUnit(int P,ul_address *CurrUnit){
 		}
 		printf("Please enter the number of unit you want to select : ");
 		scanf("%d",&pil);
-		num = 1;
-		N = UL_First(U);
-		while(num < pil){
-			N = UL_Next(N);
-			num++;
+		if ((pil > UL_NbElmt(U)) || (pil <= 0)) {
+			printf("That unit doesn't exists!\n");
 		}
-		printf("You're now selecting ");
-		PrintUnitType(UL_Info(N));
-		printf("\n");
-		*CurrUnit = N;
+		else {
+			num = 1;
+			N = UL_First(U);
+			while(num < pil){
+				N = UL_Next(N);
+				num++;
+			}
+			printf("You're now selecting ");
+			PrintUnitType(UL_Info(N));
+			printf("\n");
+			*CurrUnit = N;
+		}
 	}
 }

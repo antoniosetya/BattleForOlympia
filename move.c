@@ -89,8 +89,8 @@ void MoveCurrUnit(int P, int * MovPoint, MAP *MovMAP, Stack *MovStack){
 	int index;
 
 	// (Loc(UL_Info(UL_Curr((Units(P_Data[P])))))))
-	int currX = Absis(Loc(UL_Info(UL_Curr(Units(P_Data[P])))));
-	int currY = Ordinat(Loc(UL_Info(UL_Curr(Units(P_Data[P])))));
+	int currX = Absis(Loc(UL_Info(Ptemp)));
+	int currY = Ordinat(Loc(UL_Info(Ptemp)));
 
 	DrawPossMov(*MovMAP,P,*MovPoint,currX,currY);
 	printf("  # : Moveable location\n");
@@ -98,56 +98,63 @@ void MoveCurrUnit(int P, int * MovPoint, MAP *MovMAP, Stack *MovStack){
 		printf("\nPlease enter cell’s coordinate x y (seperated by a space): ");
 		scanf("%d%d", &CoorX, &CoorY);
 		printf("\n");
-		temp = MakePOINT(CoorX,CoorY);
-		currLoc = MakePOINT(currX,currY);
-    float distance = sqrt(pow((Absis(temp)-currX),2) + pow((Ordinat(temp)-currY),2));
-		if (distance <= Steps(UL_Info(Ptemp)) && (Elmt(*MovMAP,Absis(temp),Ordinat(temp)).CurUnit == Nil)) {
-			UpdateUnitOnMap(MovMAP,temp,&UL_Info(UL_Curr(Units(P_Data[P]))));
-			UpdateUnitOnMap(MovMAP,currLoc,Nil);
-			Loc(UL_Info(UL_Curr(Units(P_Data[P])))) = temp;
-			Push(MovStack,currLoc);
-			Steps(UL_Info(Ptemp)) -= ceil(distance);
-      printf("Successfully moved to ");TulisPOINT(temp);printf("\n");
-      // Village acquisition
-      if (BuildType(Elmt(*MovMAP,Absis(temp),Ordinat(temp)).BData) == 'V') {
-        B_Data tempVil;
-        vl_address targetVil;
-        BuildType(tempVil) = 'V';
-        BuildPos(tempVil) = temp;
-        if (BuildOwner(Elmt(*MovMAP,Absis(temp),Ordinat(temp)).BData) == 0) {
-          BuildOwner(tempVil) = 0;
-          VL_DeleteP(&FreeVillage,tempVil,&targetVil);
-          BuildOwner(VL_Info(targetVil)) = P;
-          VL_InsertFirst(&Villages(P_Data[P]),targetVil);
-          UpdateBuildingOnMap(MovMAP,temp,'V',P);
-          Income(P_Data[P])+=75;
-          printf("Acquired an empty village!\n");
-        }
-        else {
-          if (BuildOwner(Elmt(*MovMAP,Absis(temp),Ordinat(temp)).BData) != P) {
-            if (P == 1) {
-              BuildOwner(tempVil) = 2;
-              VL_DeleteP(&Villages(P_Data[2]),tempVil,&targetVil);
-              Income(P_Data[2])-=75;
-              BuildOwner(VL_Info(targetVil)) = P;
-              VL_InsertFirst(&Villages(P_Data[P]),targetVil);
-              UpdateBuildingOnMap(MovMAP,temp,'V',P);
-              Income(P_Data[P])+=75;
+    if ((CoorX > NKol(*MovMAP) || (CoorX <= 0)) || ((CoorY > NBrs(*MovMAP)) || (CoorY <= 0))) {
+      printf("Location is out of bound!\n");
+    }
+    else {
+  		temp = MakePOINT(CoorX,CoorY);
+  		currLoc = Loc(UL_Info(Ptemp));
+      float distance = sqrt(pow((Absis(temp)-currX),2) + pow((Ordinat(temp)-currY),2));
+  		if (distance <= Steps(UL_Info(Ptemp)) && (Elmt(*MovMAP,Absis(temp),Ordinat(temp)).CurUnit == Nil)) {
+  			UpdateUnitOnMap(MovMAP,temp,&UL_Info(UL_Curr(Units(P_Data[P]))));
+  			UpdateUnitOnMap(MovMAP,currLoc,Nil);
+  			Loc(UL_Info(UL_Curr(Units(P_Data[P])))) = temp;
+  			Push(MovStack,currLoc);
+  			Steps(UL_Info(Ptemp)) -= ceil(distance);
+        printf("Successfully moved to ");TulisPOINT(temp);printf("\n");
+        // Village acquisition
+        if (BuildType(Elmt(*MovMAP,Absis(temp),Ordinat(temp)).BData) == 'V') {
+          B_Data tempVil;
+          vl_address targetVil;
+          BuildType(tempVil) = 'V';
+          BuildPos(tempVil) = temp;
+          if (BuildOwner(Elmt(*MovMAP,Absis(temp),Ordinat(temp)).BData) == 0) {
+            BuildOwner(tempVil) = 0;
+            VL_DeleteP(&FreeVillage,tempVil,&targetVil);
+            BuildOwner(VL_Info(targetVil)) = P;
+            VL_InsertFirst(&Villages(P_Data[P]),targetVil);
+            UpdateBuildingOnMap(MovMAP,temp,'V',P);
+            Income(P_Data[P])+=75;
+            printf("Acquired an empty village!\n");
+            Steps(UL_Info(Ptemp)) = 0;
+          }
+          else {
+            if (BuildOwner(Elmt(*MovMAP,Absis(temp),Ordinat(temp)).BData) != P) {
+              if (P == 1) {
+                BuildOwner(tempVil) = 2;
+                VL_DeleteP(&Villages(P_Data[2]),tempVil,&targetVil);
+                Income(P_Data[1])-=75;
+                BuildOwner(VL_Info(targetVil)) = P;
+                VL_InsertFirst(&Villages(P_Data[P]),targetVil);
+                UpdateBuildingOnMap(MovMAP,temp,'V',P);
+                Income(P_Data[P])+=75;
+              }
+              else {
+                BuildOwner(tempVil) = 1;
+                VL_DeleteP(&Villages(P_Data[1]),tempVil,&targetVil);
+                Income(P_Data[2])-=75;
+                BuildOwner(VL_Info(targetVil)) = P;
+                VL_InsertFirst(&Villages(P_Data[P]),targetVil);
+                UpdateBuildingOnMap(MovMAP,temp,'V',P);
+                Income(P_Data[P])+=75;
+              }
+              printf("Acquired a village from the enemy!\n");
+              Steps(UL_Info(Ptemp)) = 0;
             }
-            else {
-              BuildOwner(tempVil) = 1;
-              VL_DeleteP(&Villages(P_Data[1]),tempVil,&targetVil);
-              Income(P_Data[2])-=75;
-              BuildOwner(VL_Info(targetVil)) = P;
-              VL_InsertFirst(&Villages(P_Data[P]),targetVil);
-              UpdateBuildingOnMap(MovMAP,temp,'V',P);
-              Income(P_Data[P])+=75;
-            }
-            printf("Acquired a village!\n");
           }
         }
-      }
-		}
-    else
-      printf("You can’t move there\n");
+  		}
+      else
+        printf("You can’t move there\n");
+    }
 }
