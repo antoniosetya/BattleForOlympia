@@ -1,7 +1,7 @@
 /*  Driver ADT Queue */
 
-#include "boolean.h"
-#include "queue.h"
+#include "../boolean.h"
+#include "../queue.h"
 #include <stdio.h>
 
 int main () {

@@ -1,7 +1,7 @@
 /* File: Driver untuk ADT Mesin Kata */
 
 #include <stdio.h>
-#include "mesinkata.h"
+#include "../mesinkata.h"
 
 int main()
 {

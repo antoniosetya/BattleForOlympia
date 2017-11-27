@@ -5,8 +5,8 @@
    Hal ini karena beberapa fungsi yang dipanggil disini
    telah memanggil fungsi yang tidak dipanggil di driver ini */
 
-#include "boolean.h"
-#include "point.h"
+#include "../boolean.h"
+#include "../point.h"
 #include <stdio.h>
 
 void PrintBool(int i) {

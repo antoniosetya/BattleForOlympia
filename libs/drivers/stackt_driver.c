@@ -1,7 +1,7 @@
 /* 	Driver ADT Stack (utama) + ADT Point */
 	
-#include "point.h"
-#include "stackt.h"
+#include "../point.h"
+#include "../stackt.h"
 #include <stdio.h>
 #include <math.h>
 
