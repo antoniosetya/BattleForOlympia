@@ -1,7 +1,7 @@
-#include "UnitList.h"
+#include "../UnitList.h"
 #include <stdio.h>
-#include "point.h"
-#include "../recruit.c"
+#include "../point.h"
+
 /*Driver dari ListLinear
  * Elemen dari List dibedakan berdasarkan letak posisinya.
  * */
