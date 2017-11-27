@@ -140,7 +140,7 @@ void ShowHelp() {
   printf("MOVE        | mo : Moves current selected unit.\n");
   printf("UNDO        | u  : Goes back to previous position after moving.\n");
   printf("CHANGE_UNIT | cu : Select another unit.\n");
-  printf("NEXT_UNIT   | nu : Select the next available unit. (that can move)");
+  printf("NEXT_UNIT   | nu : Select the next available unit. (that can move)\n");
   printf("RECRUIT     | r  : Get more units.\n");
   printf("ATTACK      | a  : Attack adjacent enemy units.\n");
   printf("MAP         | ma : Shows the game map\n");
