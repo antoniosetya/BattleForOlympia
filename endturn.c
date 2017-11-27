@@ -13,8 +13,8 @@ void End_Turn(int P, MAP *Map_Data) {
 	ul_address Pt = UL_First(Units(P_Data[P]));
 	while (Pt != Nil) {
 		if (UnitType(UL_Info(Pt)) == 'W') {
-			int x = Absis(Loc(UL_Info(UL_Curr(Units(P_Data[P])))));
-			int y = Ordinat(Loc(UL_Info(UL_Curr(Units(P_Data[P])))));
+			int x = Absis(Loc(UL_Info(Pt)));
+			int y = Ordinat(Loc(UL_Info(Pt)));
 
 			if ((Elmt(*Map_Data, x, y+1).CurUnit != Nil) && (Owner(*Elmt(*Map_Data, x, y+1).CurUnit) == P)) {
 				HP(*Elmt(*Map_Data, x, y+1).CurUnit) += 10;

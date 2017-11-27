@@ -144,7 +144,7 @@ int attack(MAP *Map_Data, UnitList *P1,UnitList *P2){
 			}
       P_1 = Nil;
      } else
-		 if(HP(UL_Info(P_fight[pilihan])) <= 0){  //Pakai else karena tidak mungkin keduanya Unit mati
+		 if (HP(UL_Info(P_fight[pilihan])) <= 0) {  //Pakai else karena tidak mungkin keduanya Unit mati
 			printf("P%d's ",Owner(UL_Info(P_fight[pilihan])));
 			PrintUnitType(UL_Info(P_fight[pilihan]));
 			printf("is Dead\n");
@@ -152,15 +152,18 @@ int attack(MAP *Map_Data, UnitList *P1,UnitList *P2){
         winFlag = Owner(UL_Info(P_1));
 				UL_DelAll(P2);
 			}else{
-        UpdateUnitOnMap(Map_Data,Loc(UL_Info(P_2)),Nil);
-        if (UL_Next(P_fight[pilihan]) == Nil) {
-          UL_Curr(*P2) = UL_First(*P2);
-        }
-        else {
-          UL_Curr(*P2) = UL_Next(P_fight[pilihan]);
+        UpdateUnitOnMap(Map_Data,Loc(UL_Info(P_fight[pilihan])),Nil);
+        // Automatically choose next unit if attacked unit is the current unit of the opposing
+        if (P_fight[pilihan] == UL_Curr(*P2)) {
+          if (UL_Next(P_fight[pilihan]) == Nil) {
+            UL_Curr(*P2) = UL_First(*P2);
+          }
+          else {
+            UL_Curr(*P2) = UL_Next(P_fight[pilihan]);
+          }
         }
         Upkeep(P_Data[Owner(UL_Info(P_fight[pilihan]))])-=UpkeepCost(UL_Info(P_fight[pilihan]));
-				UL_DelP (P2,UL_Info(P_fight[pilihan]));
+        UL_DelP (P2,UL_Info(P_fight[pilihan]));
 			}
 		 }
 
