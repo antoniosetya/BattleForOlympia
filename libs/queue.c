@@ -7,12 +7,12 @@
 #include "queue.h"
 
 /* ********* Prototype ********* */
-boolean IsEmpty (Queue Q) {
+boolean IsQueueEmpty (Queue Q) {
 /* Mengirim true jika Q kosong */
   return ((Head(Q) == NilQ) && (Tail(Q) == NilQ));
 }
 
-boolean IsFull (Queue Q) {
+boolean IsQueueFull (Queue Q) {
 /* Mengirim true jika tabel penampung elemen Q sudah penuh */
 /* yaitu mengandung elemen sebanyak MaxEl */
   return (NBElmtQueue(Q) == MaxQueueEl);
@@ -20,7 +20,7 @@ boolean IsFull (Queue Q) {
 
 int NBElmtQueue (Queue Q) {
 /* Mengirimkan banyaknya elemen queue. Mengirimkan 0 jika Q kosong. */
-  if (IsEmpty(Q)) {
+  if (IsQueueEmpty(Q)) {
     return 0;
   }
   else if (Tail(Q) < Head(Q)) {
@@ -46,8 +46,8 @@ void Add (Queue * Q, infoQ X) {
 /* Proses: Menambahkan X pada Q dengan aturan FIFO */
 /* I.S. Q mungkin kosong, tabel penampung elemen Q TIDAK penuh */
 /* F.S. X menjadi TAIL yang baru, TAIL "maju" dengan mekanisme circular buffer */
-  if (!IsFull(*Q)) {
-    if (IsEmpty(*Q)) {
+  if (!IsQueueFull(*Q)) {
+    if (IsQueueEmpty(*Q)) {
       Head(*Q)++;
       Tail(*Q)++;
       InfoTail(*Q) = X;
